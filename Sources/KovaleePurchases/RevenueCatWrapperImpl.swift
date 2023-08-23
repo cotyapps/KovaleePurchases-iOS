@@ -1,8 +1,9 @@
 import Foundation
 import KovaleeFramework
+import KovaleeSDK
 import RevenueCat
 
-class RevenueCatWrapperImpl: NSObject, PurchaseManager {
+class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 	init(withKeys keys: KovaleeKeys.RevenueCat) {
         super.init()
 
