@@ -25,7 +25,7 @@ It's part of a broader project KovaleeSDK
   spec.swift_version         = '5.7'
   spec.source_files          = "Sources/KovaleePurchases/*.swift"
 
-  spec.dependency "KovaleeSDK"
+  spec.dependency "KovaleeSDK" ~> '1.3.3'
   spec.dependency "RevenueCat"
 
 end
