@@ -64,4 +64,23 @@ extension Kovalee {
 	public static func purchase(package: Package, fromSource source: String) async throws -> PurchaseResultData? {
 		try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
 	}
+
+	/// Performs a purchase of a subscriptoin with specified Id and duration
+	///
+	/// - Parameters:
+	///    - subscriptionId: the id of the product to be purchased
+	///    - duration: duration of the subscription
+	///    - fromSource: from where is the user making the purchase
+	/// - Returns: the result of the purchase transation as ``PurchaseResultData``
+	public static func purchaseSubscription(
+		withId subscriptionId: String,
+		andDuration duration: Int,
+		fromSource source: String
+	) async throws -> PurchaseResultData? {
+		try await Self.shared.kovaleeManager?.purchaseSubscription(
+			withIdentifier: subscriptionId,
+			andDuration: duration,
+			fromSource: source
+		) as? PurchaseResultData
+	}
 }
