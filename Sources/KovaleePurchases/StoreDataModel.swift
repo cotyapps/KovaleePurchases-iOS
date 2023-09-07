@@ -4,7 +4,7 @@ import RevenueCat
 
 // swiftlint:disable file_length
 /// A container for the most recent customer info
-public class CustomerInfo: AbstractCustomerInfo {
+public class CustomerInfo: AbstractCustomerInfo, Encodable {
 
     /// ``EntitlementInfos`` attached to this customer info.
     public let entitlements: EntitlementInfos
@@ -60,7 +60,7 @@ public class CustomerInfo: AbstractCustomerInfo {
 }
 
 /// This class contains all the entitlements associated to the user.
-public class EntitlementInfos: NSObject {
+public class EntitlementInfos: NSObject, Encodable {
 
     /**
      Dictionary of all EntitlementInfo (``EntitlementInfo``) objects (active and inactive) keyed by entitlement
@@ -81,7 +81,7 @@ public class EntitlementInfos: NSObject {
 }
 
 ///  The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
-public class EntitlementInfo: NSObject {
+public class EntitlementInfo: NSObject, Encodable {
 
     /// The entitlement identifier configured in the RevenueCat dashboard
     public var identifier: String
@@ -147,7 +147,7 @@ public class EntitlementInfo: NSObject {
 }
 
 /// Information that represents a non-subscription purchase made by a user.
-public class NonSubscriptionTransaction: NSObject {
+public class NonSubscriptionTransaction: NSObject, Encodable {
 
     /// The product identifier.
     public let productIdentifier: String
@@ -165,7 +165,7 @@ public class NonSubscriptionTransaction: NSObject {
     }
 }
 
-public enum PeriodType: Int {
+public enum PeriodType: Int, Encodable {
     /// If the entitlement is not under an introductory or trial period.
     case normal = 0
 
@@ -176,13 +176,13 @@ public enum PeriodType: Int {
     case trial = 2
 }
 
-public enum PurchaseOwnershipType: Int {
+public enum PurchaseOwnershipType: Int, Encodable {
     case purchased = 0
     case familyShared = 1
     case unknown = 2
 }
 
-public enum Store: Int {
+public enum Store: Int, Encodable {
     /// For entitlements granted via Apple App Store.
     case appStore = 0
     /// For entitlements granted via Apple Mac App Store.
@@ -204,7 +204,7 @@ public enum Store: Int {
     case amazon = 6
 }
 
-public class Product {
+public class Product: Encodable {
     var identifier: String
     var isActive: Bool
     var willRenew: Bool
@@ -232,7 +232,7 @@ public class Product {
     }
 }
 
-public struct Offerings: AbstractOfferings {
+public struct Offerings: AbstractOfferings, Encodable {
     public let all: [String: Offering]
     public var current: Offering?
 
@@ -246,7 +246,7 @@ public struct Offerings: AbstractOfferings {
 
 /// An offering is a collection of ``Package``s, and they let you control which products
 /// are shown to users without requiring an app update.
-public class Offering: AbstractOffering {
+public class Offering: AbstractOffering, Encodable {
 
     /// Unique identifier defined in RevenueCat dashboard.
     public let identifier: String
@@ -294,7 +294,7 @@ public class Offering: AbstractOffering {
 
 /// Packages help abstract platform-specific products by grouping equivalent products across iOS, Android, and web.
 /// A package is made up of three parts: ``identifier``, ``packageType``, and underlying ``StoreProduct``.
-public class Package: Identifiable, AbstractPackage {
+public class Package: Identifiable, AbstractPackage, Encodable {
     public var id: String {
         identifier
     }
@@ -336,6 +336,28 @@ public class Package: Identifiable, AbstractPackage {
         self.localizedIntroductoryPriceString = package.localizedIntroductoryPriceString
         self.rcPackage = package
     }
+
+	enum CodingKeys: String, CodingKey {
+		case identifier
+		case packageType
+		case storeProduct
+		case offeringIdentifier
+		case localizedPriceString
+		case localizedIntroductoryPriceString
+		case rcPackage
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(identifier, forKey: .identifier)
+		try container.encode(packageType, forKey: .packageType)
+		try container.encode(storeProduct, forKey: .storeProduct)
+		try container.encode(offeringIdentifier, forKey: .offeringIdentifier)
+		try container.encode(localizedPriceString, forKey: .localizedPriceString)
+		try container.encode(localizedIntroductoryPriceString, forKey: .localizedIntroductoryPriceString)
+//		try container.encode(rcPackage, forKey: .rcPackage)
+	}
 	
 	internal required init() {
 		self.identifier = "0"
@@ -372,7 +394,7 @@ public class Package: Identifiable, AbstractPackage {
 }
 
 /// Type that provides access to all of `StoreKit`'s product type's properties.
-public struct StoreProduct {
+public struct StoreProduct: Encodable {
 	
 	/// The type of product.
 	public var productType: ProductType
@@ -454,6 +476,42 @@ public struct StoreProduct {
 		self.introductoryDiscount = StoreProductDiscount(product.introductoryDiscount)
 		self.discounts = product.discounts.compactMap { StoreProductDiscount($0) }
 	}
+
+	enum CodingKeys: String, CodingKey {
+		case productType
+		case productCategory
+		case localizedDescription
+		case localizedTitle
+		case currencyCode
+		case price
+		case localizedPriceString
+		case productIdentifier
+		case isFamilyShareable
+		case subscriptionGroupIdentifier
+		case priceFormatter
+		case subscriptionPeriod
+		case introductoryDiscount
+		case discounts
+	}
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(productType, forKey: .productType)
+		try container.encode(productCategory, forKey: .productCategory)
+		try container.encode(localizedDescription, forKey: .localizedDescription)
+		try container.encode(localizedTitle, forKey: .localizedTitle)
+		try container.encode(currencyCode, forKey: .currencyCode)
+		try container.encode(price, forKey: .price)
+		try container.encode(localizedPriceString, forKey: .localizedPriceString)
+
+		try container.encode(productIdentifier, forKey: .productIdentifier)
+		try container.encode(isFamilyShareable, forKey: .isFamilyShareable)
+		try container.encode(subscriptionGroupIdentifier, forKey: .subscriptionGroupIdentifier)
+
+		try container.encode(subscriptionPeriod, forKey: .subscriptionPeriod)
+		try container.encode(introductoryDiscount, forKey: .introductoryDiscount)
+		try container.encode(discounts, forKey: .discounts)
+	}
 	
 	private init() {
 		self.productType = .consumable
@@ -477,14 +535,14 @@ public struct StoreProduct {
 	}
 }
 
-public enum ProductCategory: Int {
+public enum ProductCategory: Int, Encodable {
     /// A non-renewable or auto-renewable subscription.
     case subscription
     /// A consumable or non-consumable in-app purchase.
     case nonSubscription
 }
 
-public enum ProductType: Int {
+public enum ProductType: Int, Encodable {
     /// A consumable in-app purchase.
     case consumable
     /// A non-consumable in-app purchase.
@@ -495,13 +553,13 @@ public enum ProductType: Int {
     case autoRenewableSubscription
 }
 
-public struct SubscriptionPeriod {
+public struct SubscriptionPeriod: Encodable {
     /// The number of period units.
     public let value: Int
     /// The increment of time that a subscription period is specified in.
     public let unit: Unit
 
-    public enum Unit: Int {
+    public enum Unit: Int, Encodable {
         /// A subscription period unit of a day.
         case day = 0
         /// A subscription period unit of a week.
@@ -518,8 +576,8 @@ public struct SubscriptionPeriod {
     }
 }
 
-public struct StoreProductDiscount {
-    public enum PaymentMode: Int {
+public struct StoreProductDiscount: Encodable {
+    public enum PaymentMode: Int, Encodable {
 
         /// Price is charged one or more times
         case payAsYouGo = 0
@@ -530,7 +588,7 @@ public struct StoreProductDiscount {
 
     }
 
-    public enum DiscountType: Int {
+    public enum DiscountType: Int, Encodable {
         /// Introductory offer
         case introductory = 0
         /// Promotional offer for subscriptions
@@ -562,7 +620,7 @@ public struct StoreProductDiscount {
     }
 }
 
-public enum PackageType: Int {
+public enum PackageType: Int, Encodable {
 
     /// A package that was defined with an unknown identifier.
     case unknown = -2,
@@ -584,7 +642,7 @@ public enum PackageType: Int {
     weekly
 }
 
-public struct StoreTransaction {
+public struct StoreTransaction: Encodable {
     public var productIdentifier: String
     public var purchaseDate: Date
     public var transactionIdentifier: String
@@ -601,7 +659,7 @@ public struct StoreTransaction {
     }
 }
 
-public struct PurchaseResultData: AbstractPurchaseResultData {
+public struct PurchaseResultData: AbstractPurchaseResultData, Encodable {
     public var transaction: StoreTransaction?
     public var customerInfo: CustomerInfo
     public var userCancelled: Bool
