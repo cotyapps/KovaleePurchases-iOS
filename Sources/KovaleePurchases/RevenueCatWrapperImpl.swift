@@ -61,6 +61,21 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         )
     }
 
+	func purchaseProduct(withId productId: String) async throws -> AbstractPurchaseResultData {
+		guard let product = await Purchases.shared.products([productId]).first else {
+			throw KovaleePurchasesError.noProductWithSpecifiedId
+		}
+
+		let purchaseResult = try await Purchases.shared.purchase(product: product)
+		KLogger.debug("🛍️ Purchase \(purchaseResult)")
+
+		return PurchaseResultData(
+			transaction: StoreTransaction(transaction: purchaseResult.transaction),
+			customerInfo: CustomerInfo(info: purchaseResult.customerInfo),
+			userCancelled: purchaseResult.userCancelled
+		)
+	}
+
     func customerInfo() async throws -> AbstractCustomerInfo {
         let info = try await Purchases.shared.customerInfo()
         return CustomerInfo(info: info)
@@ -73,6 +88,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     func setAmplitudeUserId(userId: String) {
         Purchases.shared.attribution.setAttributes(["$amplitudeUserId": userId])
     }
+}
+
+public enum KovaleePurchasesError: Error {
+	case noProductWithSpecifiedId
 }
 
 extension KovaleeFramework.LogLevel {
