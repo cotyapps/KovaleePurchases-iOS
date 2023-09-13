@@ -278,6 +278,8 @@ public class Offering: AbstractOffering, Encodable {
     /// Weekly ``Package`` type configured in the RevenueCat dashboard, if available.
     public let weekly: Package?
 
+	public let rcOffering: Any
+
     init(offering: RevenueCat.Offering) {
         self.identifier = offering.identifier
         self.serverDescription = offering.serverDescription
@@ -289,7 +291,37 @@ public class Offering: AbstractOffering, Encodable {
         self.twoMonth = Package(package: offering.twoMonth)
         self.monthly = Package(package: offering.monthly)
         self.weekly = Package(package: offering.weekly)
+		self.rcOffering = offering
     }
+	
+	enum CodingKeys: String, CodingKey {
+		case identifier
+		case serverDescription
+		case availablePackages
+		case lifetime
+		case annual
+		case sixMonth
+		case threeMonth
+		case twoMonth
+		case monthly
+		case weekly
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(identifier, forKey: .identifier)
+		try container.encode(serverDescription, forKey: .serverDescription)
+		try container.encode(availablePackages, forKey: .availablePackages)
+		try container.encode(lifetime, forKey: .lifetime)
+		try container.encode(annual, forKey: .annual)
+		try container.encode(sixMonth, forKey: .sixMonth)
+		try container.encode(threeMonth, forKey: .threeMonth)
+		try container.encode(twoMonth, forKey: .twoMonth)
+		try container.encode(monthly, forKey: .monthly)
+		try container.encode(weekly, forKey: .weekly)
+//		try container.encode(rcPackage, forKey: .rcPackage)
+	}
 }
 
 /// Packages help abstract platform-specific products by grouping equivalent products across iOS, Android, and web.
