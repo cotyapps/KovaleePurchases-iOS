@@ -23,8 +23,8 @@
         "package": "RevenueCat",
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios",
         "state": {
-          "branch": "4.26.0-beta.3",
-          "revision": "c13e934e57797218ece5540871cea600c1265d30",
+          "branch": "4.26.0-beta.4",
+          "revision": "dbe6874bc5e761f9c5166466689eedaf8fd01f81",
           "version": null
         }
       }

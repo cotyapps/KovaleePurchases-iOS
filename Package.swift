@@ -20,7 +20,7 @@ let package = Package(
     dependencies: [
 		.package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", from: Version(1, 3, 3)),
 //		.package(url: "https://github.com/RevenueCat/purchases-ios", from: Version(4, 25, 0))
-		.package(url: "https://github.com/RevenueCat/purchases-ios", branch: "4.26.0-beta.3")
+		.package(url: "https://github.com/RevenueCat/purchases-ios", branch: "4.26.0-beta.4")
     ],
     targets: [
         .target(
