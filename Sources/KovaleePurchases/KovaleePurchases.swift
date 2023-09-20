@@ -74,12 +74,12 @@ extension Kovalee {
 	/// - Returns: the result of the purchase transation as ``PurchaseResultData``
 	public static func purchaseSubscription(
 		withId subscriptionId: String,
-		andDuration duration: Int,
+		andDuration duration: Duration,
 		fromSource source: String
 	) async throws -> PurchaseResultData? {
 		try await Self.shared.kovaleeManager?.purchaseSubscription(
 			withIdentifier: subscriptionId,
-			andDuration: duration,
+			andDuration: duration.inDays,
 			fromSource: source
 		) as? PurchaseResultData
 	}
