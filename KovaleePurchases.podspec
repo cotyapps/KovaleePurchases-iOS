@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "KovaleePurchases"
-  spec.version      = "1.1.7"
+  spec.version      = "1.1.5"
   spec.summary      = "KovaleePurchases simplify in-app purchases and subscriptions"
   spec.description  = <<-DESC
   Adding in-app purchases and subscriptions doesn't need to be a headache. KovaleePurchases comes with a set of APIs designed to streamline this integration.
