@@ -26,7 +26,7 @@ let package = Package(
             name: "KovaleePurchases",
             dependencies: [
 				.product(name: "KovaleeSDK", package: "Kovalee-iOS-SDK"),
-				.productItem(name: "KovaleeSDK", package: "KovaleeSDK")
+				.product(name: "RevenueCat", package: "purchases-ios"),
 			]
 		)
     ]
