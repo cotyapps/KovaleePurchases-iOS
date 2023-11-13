@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2023-11-13
+### :sparkles: New Features
+- [`147f5d3`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/147f5d3742efc076f3d2aec59b7c0f2a586a00dc) - improved Offering data structure to provide also metadata *(commit by [@fto-k](https://github.com/fto-k))*
+- [`2b6ee72`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/2b6ee72ca160183ed44aedaac6e3f1e7bf38c22f) - added product price per month and checkTrialOrIntroDiscountEligibility function *(commit by [@fto-k](https://github.com/fto-k))*
+- [`fe734b3`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/fe734b3681bb1317443f382f184518e4809633d3) - added new PurchaseDelegate *(commit by [@fto-k](https://github.com/fto-k))*
+- [`d5efd02`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/d5efd02e646e16f5a968f5395f6a04ba5863d2d2) - set pricePerMonth / pricePerYear to public *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :bug: Bug Fixes
+- [`05546e7`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/05546e7263ac1aefb9b2f583e19bd24cfd6eb853) - reverted package.swift *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.1.5] - 2023-10-30
 ### :recycle: Refactors
 - [`83a3355`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/83a3355ef817c26e4da35be9e956f76c75ba1795) - updated purchase function used by ReactNatvie wrapper *(commit by [@fto-k](https://github.com/fto-k))*
@@ -35,3 +46,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.3]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.2...1.1.3
 [1.1.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.3...1.1.4
 [1.1.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.4...1.1.5
+[1.2.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.5...1.2.0
