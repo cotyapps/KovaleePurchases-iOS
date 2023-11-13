@@ -18,15 +18,17 @@ let package = Package(
 		)
     ],
     dependencies: [
-		.package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", from: Version(1, 3, 3)),
+//		.package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", from: Version(1, 3, 3)),
+		.package(path: "../KovaleeSDK/"),
 		.package(url: "https://github.com/RevenueCat/purchases-ios", from: Version(4, 25, 0))
     ],
     targets: [
         .target(
             name: "KovaleePurchases",
             dependencies: [
-				.product(name: "KovaleeSDK", package: "Kovalee-iOS-SDK"),
-				.product(name: "RevenueCat", package: "purchases-ios")
+//				.product(name: "KovaleeSDK", package: "Kovalee-iOS-SDK"),
+				.product(name: "RevenueCat", package: "purchases-ios"),
+				.productItem(name: "KovaleeSDK", package: "KovaleeSDK")
 			]
 		)
     ]

@@ -585,6 +585,20 @@ public struct StoreProduct: Encodable {
 	}
 }
 
+extension StoreProduct {
+	/// Calculates the price of this subscription product per month.
+	/// - Returns: `nil` if the product is not a subscription.
+	var pricePerMonth: NSDecimalNumber? {
+		return self.subscriptionPeriod?.pricePerMonth(withTotalPrice: self.price) as NSDecimalNumber?
+	}
+
+	/// Calculates the price of this subscription product per year.
+	/// - Returns: `nil` if the product is not a subscription.
+	var pricePerYear: NSDecimalNumber? {
+		return self.subscriptionPeriod?.pricePerYear(withTotalPrice: self.price) as NSDecimalNumber?
+	}
+}
+
 public enum ProductCategory: Int, Encodable {
     /// A non-renewable or auto-renewable subscription.
     case subscription
@@ -624,6 +638,49 @@ public struct SubscriptionPeriod: Encodable {
         self.value = period.value
         self.unit = Unit(rawValue: period.unit.rawValue)!
     }
+	
+	func pricePerMonth(withTotalPrice price: Decimal) -> Decimal {
+		return self.pricePerPeriod(for: self.unitsPerMonth, totalPrice: price)
+	}
+
+	func pricePerYear(withTotalPrice price: Decimal) -> Decimal {
+		return self.pricePerPeriod(for: self.unitsPerYear, totalPrice: price)
+	}
+
+	private var unitsPerMonth: Decimal {
+		switch self.unit {
+		case .day: return 1 / 30
+		case .week: return 1 / 4
+		case .month: return 1
+		case .year: return 12
+		}
+	}
+
+	private var unitsPerYear: Decimal {
+		switch self.unit {
+		case .day: return 1 / 365
+		case .week: return 1 / 52.14 // Number of weeks in a year
+		case .month: return 1 / 12
+		case .year: return 1
+		}
+	}
+
+	private func pricePerPeriod(for units: Decimal, totalPrice: Decimal) -> Decimal {
+		let periods: Decimal = units * Decimal(self.value)
+
+		return (totalPrice as NSDecimalNumber)
+			.dividing(by: periods as NSDecimalNumber,
+					  withBehavior: Self.roundingBehavior) as Decimal
+	}
+
+	private static let roundingBehavior = NSDecimalNumberHandler(
+		roundingMode: .down,
+		scale: 2,
+		raiseOnExactness: false,
+		raiseOnOverflow: false,
+		raiseOnUnderflow: false,
+		raiseOnDivideByZero: false
+	)
 }
 
 public struct StoreProductDiscount: Encodable {
@@ -713,5 +770,12 @@ public struct PurchaseResultData: AbstractPurchaseResultData, Encodable {
     public var transaction: StoreTransaction?
     public var customerInfo: CustomerInfo
     public var userCancelled: Bool
+}
+
+public enum IntroEligibilityStatus: Int {
+	case unknown = 0
+	case ineligible
+	case eligible
+	case noIntroOfferExists
 }
 // swiftlint:enable file_length

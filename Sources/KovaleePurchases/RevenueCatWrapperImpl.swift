@@ -47,6 +47,12 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 		KLogger.debug("🛍️ Fetched current offering \(current)")
         return Offering(offering: current)
     }
+	
+	func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: Int] {
+		await Purchases.shared
+			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)
+			.mapValues { $0.status.rawValue }
+	}
 
     func restorePurchases() async throws -> AbstractCustomerInfo? {
 		KLogger.debug("🛍️ Restoring purchase...")
@@ -93,6 +99,12 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     func setAmplitudeUserId(userId: String) {
         Purchases.shared.attribution.setAttributes(["$amplitudeUserId": userId])
     }
+}
+
+extension RevenueCatWrapperImpl: PurchasesDelegate {
+	private func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+		
+	}
 }
 
 public enum KovaleePurchasesError: Error {

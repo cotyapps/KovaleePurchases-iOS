@@ -84,4 +84,14 @@ extension Kovalee {
 
 		return try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
 	}
+
+	public static func revenueCatUserId() -> String {
+		Self.shared.kovaleeManager?.revenueCatUserId() ?? ""
+	}
+
+	public static func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: IntroEligibilityStatus] {
+		await Self.shared.kovaleeManager?
+			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)?
+			.compactMapValues { IntroEligibilityStatus(rawValue: $0) } ?? [:]
+	}
 }
