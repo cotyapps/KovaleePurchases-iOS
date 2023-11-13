@@ -16,6 +16,7 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 				.with(observerMode: keys.observerMode)
 				.build()
         )
+		Purchases.shared.delegate = self
     }
 
     func setUserId(userId: String) {
@@ -23,6 +24,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
             try? await Purchases.shared.logIn(userId)
         }
     }
+	
+	func revenueCatUserId() -> String {
+		Purchases.shared.appUserID
+	}
 
     func fetchOfferings() async throws -> AbstractOfferings? {
         let rcOfferings = try await Purchases.shared.offerings()
@@ -39,9 +44,16 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         guard let current = rcOfferings.current else {
             return nil
         }
+
 		KLogger.debug("🛍️ Fetched current offering \(current)")
         return Offering(offering: current)
     }
+	
+	func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: Int] {
+		await Purchases.shared
+			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)
+			.mapValues { $0.status.rawValue }
+	}
 
     func restorePurchases() async throws -> AbstractCustomerInfo? {
 		KLogger.debug("🛍️ Restoring purchase...")
@@ -88,6 +100,20 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     func setAmplitudeUserId(userId: String) {
         Purchases.shared.attribution.setAttributes(["$amplitudeUserId": userId])
     }
+	
+	func setPurchaseDelegate(_ delegate: KovaleeFramework.KovaleePurchasesDelegate) {
+		self.delegate = delegate
+	}
+	
+	private var delegate: KovaleeFramework.KovaleePurchasesDelegate?
+}
+
+extension RevenueCatWrapperImpl: RevenueCat.PurchasesDelegate {
+	func purchases(_ purchases: Purchases, receivedUpdated customerInfo: RevenueCat.CustomerInfo) {
+		KLogger.debug("🛍️ did receive update \(customerInfo)")
+
+		self.delegate?.didRecieveUpdate(CustomerInfo(info: customerInfo))
+	}
 }
 
 public enum KovaleePurchasesError: Error {

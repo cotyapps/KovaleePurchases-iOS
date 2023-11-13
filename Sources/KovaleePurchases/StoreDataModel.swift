@@ -256,6 +256,9 @@ public class Offering: AbstractOffering, Encodable {
 
     /// Array of ``Package`` objects available for purchase.
     public let availablePackages: [Package]
+	
+	/// Offering metadata defined in RevenueCat dashboard.
+	public let metadata: [String: Any]
 
     /// Lifetime ``Package`` type configured in the RevenueCat dashboard, if available.
     public let lifetime: Package?
@@ -282,6 +285,7 @@ public class Offering: AbstractOffering, Encodable {
         self.identifier = offering.identifier
         self.serverDescription = offering.serverDescription
         self.availablePackages = offering.availablePackages.compactMap { Package(package: $0) }
+		self.metadata = offering.metadata
         self.lifetime = Package(package: offering.lifetime)
         self.annual = Package(package: offering.annual)
         self.sixMonth = Package(package: offering.sixMonth)
@@ -290,6 +294,52 @@ public class Offering: AbstractOffering, Encodable {
         self.monthly = Package(package: offering.monthly)
         self.weekly = Package(package: offering.weekly)
     }
+	
+	enum CodingKeys: String, CodingKey {
+		case identifier
+		case serverDescription
+		case availablePackages
+		case metadata
+		case lifetime
+		case annual
+		case sixMonth
+		case threeMonth
+		case twoMonth
+		case monthly
+		case weekly
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(identifier, forKey: .identifier)
+		try container.encode(serverDescription, forKey: .serverDescription)
+		try container.encode(availablePackages, forKey: .availablePackages)
+//		try container.encode(metadata, forKey: .metadata)
+		try container.encode(lifetime, forKey: .lifetime)
+		try container.encode(annual, forKey: .annual)
+		try container.encode(sixMonth, forKey: .sixMonth)
+		try container.encode(threeMonth, forKey: .threeMonth)
+		try container.encode(twoMonth, forKey: .twoMonth)
+		try container.encode(monthly, forKey: .monthly)
+		try container.encode(weekly, forKey: .weekly)
+	}
+}
+
+
+extension Offering {
+
+	/**
+	 - Returns: the `metadata` value associated to `key` for the expected type,
+	 or `default` if not found, or it's not the expected type.
+	 */
+	public func getMetadataValue<T>(for key: String, default: T) -> T {
+		guard let rawValue = self.metadata[key], let value = rawValue as? T else {
+			return `default`
+		}
+		return value
+	}
+
 }
 
 /// Packages help abstract platform-specific products by grouping equivalent products across iOS, Android, and web.
@@ -535,6 +585,20 @@ public struct StoreProduct: Encodable {
 	}
 }
 
+extension StoreProduct {
+	/// Calculates the price of this subscription product per month.
+	/// - Returns: `nil` if the product is not a subscription.
+	public var pricePerMonth: NSDecimalNumber? {
+		return self.subscriptionPeriod?.pricePerMonth(withTotalPrice: self.price) as NSDecimalNumber?
+	}
+
+	/// Calculates the price of this subscription product per year.
+	/// - Returns: `nil` if the product is not a subscription.
+	public var pricePerYear: NSDecimalNumber? {
+		return self.subscriptionPeriod?.pricePerYear(withTotalPrice: self.price) as NSDecimalNumber?
+	}
+}
+
 public enum ProductCategory: Int, Encodable {
     /// A non-renewable or auto-renewable subscription.
     case subscription
@@ -574,6 +638,49 @@ public struct SubscriptionPeriod: Encodable {
         self.value = period.value
         self.unit = Unit(rawValue: period.unit.rawValue)!
     }
+	
+	func pricePerMonth(withTotalPrice price: Decimal) -> Decimal {
+		return self.pricePerPeriod(for: self.unitsPerMonth, totalPrice: price)
+	}
+
+	func pricePerYear(withTotalPrice price: Decimal) -> Decimal {
+		return self.pricePerPeriod(for: self.unitsPerYear, totalPrice: price)
+	}
+
+	private var unitsPerMonth: Decimal {
+		switch self.unit {
+		case .day: return 1 / 30
+		case .week: return 1 / 4
+		case .month: return 1
+		case .year: return 12
+		}
+	}
+
+	private var unitsPerYear: Decimal {
+		switch self.unit {
+		case .day: return 1 / 365
+		case .week: return 1 / 52.14 // Number of weeks in a year
+		case .month: return 1 / 12
+		case .year: return 1
+		}
+	}
+
+	private func pricePerPeriod(for units: Decimal, totalPrice: Decimal) -> Decimal {
+		let periods: Decimal = units * Decimal(self.value)
+
+		return (totalPrice as NSDecimalNumber)
+			.dividing(by: periods as NSDecimalNumber,
+					  withBehavior: Self.roundingBehavior) as Decimal
+	}
+
+	private static let roundingBehavior = NSDecimalNumberHandler(
+		roundingMode: .down,
+		scale: 2,
+		raiseOnExactness: false,
+		raiseOnOverflow: false,
+		raiseOnUnderflow: false,
+		raiseOnDivideByZero: false
+	)
 }
 
 public struct StoreProductDiscount: Encodable {
@@ -663,5 +770,12 @@ public struct PurchaseResultData: AbstractPurchaseResultData, Encodable {
     public var transaction: StoreTransaction?
     public var customerInfo: CustomerInfo
     public var userCancelled: Bool
+}
+
+public enum IntroEligibilityStatus: Int {
+	case unknown = 0
+	case ineligible
+	case eligible
+	case noIntroOfferExists
 }
 // swiftlint:enable file_length
