@@ -256,6 +256,9 @@ public class Offering: AbstractOffering, Encodable {
 
     /// Array of ``Package`` objects available for purchase.
     public let availablePackages: [Package]
+	
+	/// Offering metadata defined in RevenueCat dashboard.
+	public let metadata: [String: Any]
 
     /// Lifetime ``Package`` type configured in the RevenueCat dashboard, if available.
     public let lifetime: Package?
@@ -282,6 +285,7 @@ public class Offering: AbstractOffering, Encodable {
         self.identifier = offering.identifier
         self.serverDescription = offering.serverDescription
         self.availablePackages = offering.availablePackages.compactMap { Package(package: $0) }
+		self.metadata = offering.metadata
         self.lifetime = Package(package: offering.lifetime)
         self.annual = Package(package: offering.annual)
         self.sixMonth = Package(package: offering.sixMonth)
@@ -290,6 +294,52 @@ public class Offering: AbstractOffering, Encodable {
         self.monthly = Package(package: offering.monthly)
         self.weekly = Package(package: offering.weekly)
     }
+	
+	enum CodingKeys: String, CodingKey {
+		case identifier
+		case serverDescription
+		case availablePackages
+		case metadata
+		case lifetime
+		case annual
+		case sixMonth
+		case threeMonth
+		case twoMonth
+		case monthly
+		case weekly
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+
+		try container.encode(identifier, forKey: .identifier)
+		try container.encode(serverDescription, forKey: .serverDescription)
+		try container.encode(availablePackages, forKey: .availablePackages)
+//		try container.encode(metadata, forKey: .metadata)
+		try container.encode(lifetime, forKey: .lifetime)
+		try container.encode(annual, forKey: .annual)
+		try container.encode(sixMonth, forKey: .sixMonth)
+		try container.encode(threeMonth, forKey: .threeMonth)
+		try container.encode(twoMonth, forKey: .twoMonth)
+		try container.encode(monthly, forKey: .monthly)
+		try container.encode(weekly, forKey: .weekly)
+	}
+}
+
+
+extension Offering {
+
+	/**
+	 - Returns: the `metadata` value associated to `key` for the expected type,
+	 or `default` if not found, or it's not the expected type.
+	 */
+	public func getMetadataValue<T>(for key: String, default: T) -> T {
+		guard let rawValue = self.metadata[key], let value = rawValue as? T else {
+			return `default`
+		}
+		return value
+	}
+
 }
 
 /// Packages help abstract platform-specific products by grouping equivalent products across iOS, Android, and web.

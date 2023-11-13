@@ -23,6 +23,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
             try? await Purchases.shared.logIn(userId)
         }
     }
+	
+	func revenueCatUserId() -> String {
+		Purchases.shared.appUserID
+	}
 
     func fetchOfferings() async throws -> AbstractOfferings? {
         let rcOfferings = try await Purchases.shared.offerings()
@@ -39,6 +43,7 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         guard let current = rcOfferings.current else {
             return nil
         }
+
 		KLogger.debug("🛍️ Fetched current offering \(current)")
         return Offering(offering: current)
     }
