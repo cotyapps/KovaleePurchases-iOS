@@ -588,13 +588,13 @@ public struct StoreProduct: Encodable {
 extension StoreProduct {
 	/// Calculates the price of this subscription product per month.
 	/// - Returns: `nil` if the product is not a subscription.
-	var pricePerMonth: NSDecimalNumber? {
+	public var pricePerMonth: NSDecimalNumber? {
 		return self.subscriptionPeriod?.pricePerMonth(withTotalPrice: self.price) as NSDecimalNumber?
 	}
 
 	/// Calculates the price of this subscription product per year.
 	/// - Returns: `nil` if the product is not a subscription.
-	var pricePerYear: NSDecimalNumber? {
+	public var pricePerYear: NSDecimalNumber? {
 		return self.subscriptionPeriod?.pricePerYear(withTotalPrice: self.price) as NSDecimalNumber?
 	}
 }
