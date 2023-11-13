@@ -94,4 +94,8 @@ extension Kovalee {
 			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)?
 			.compactMapValues { IntroEligibilityStatus(rawValue: $0) } ?? [:]
 	}
+
+	public static func setPurchasesDelegate(_ delegate: KovaleePurchasesDelegate) {
+		Self.shared.kovaleeManager?.setPurchaseDelegate(delegate)
+	}
 }

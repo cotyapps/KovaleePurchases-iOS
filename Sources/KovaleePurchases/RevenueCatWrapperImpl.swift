@@ -16,6 +16,7 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 				.with(observerMode: keys.observerMode)
 				.build()
         )
+		Purchases.shared.delegate = self
     }
 
     func setUserId(userId: String) {
@@ -99,11 +100,19 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     func setAmplitudeUserId(userId: String) {
         Purchases.shared.attribution.setAttributes(["$amplitudeUserId": userId])
     }
+	
+	func setPurchaseDelegate(_ delegate: KovaleeFramework.KovaleePurchasesDelegate) {
+		self.delegate = delegate
+	}
+	
+	private var delegate: KovaleeFramework.KovaleePurchasesDelegate?
 }
 
-extension RevenueCatWrapperImpl: PurchasesDelegate {
-	private func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
-		
+extension RevenueCatWrapperImpl: RevenueCat.PurchasesDelegate {
+	func purchases(_ purchases: Purchases, receivedUpdated customerInfo: RevenueCat.CustomerInfo) {
+		KLogger.debug("🛍️ did receive update \(customerInfo)")
+
+		self.delegate?.didRecieveUpdate(CustomerInfo(info: customerInfo))
 	}
 }
 
