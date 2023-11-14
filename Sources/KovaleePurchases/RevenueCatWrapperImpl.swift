@@ -55,10 +55,12 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 			.mapValues { $0.status.rawValue }
 	}
 
-    func restorePurchases() async throws -> AbstractCustomerInfo? {
+    func restorePurchases() async throws -> AbstractCustomerInfo {
 		KLogger.debug("🛍️ Restoring purchase...")
 
         let rcCustomerInfo = try await Purchases.shared.restorePurchases()
+		KLogger.debug("🛍️ Purchase restored with customer info: \(rcCustomerInfo)")
+
         return CustomerInfo(info: rcCustomerInfo)
     }
 
@@ -112,7 +114,7 @@ extension RevenueCatWrapperImpl: RevenueCat.PurchasesDelegate {
 	func purchases(_ purchases: Purchases, receivedUpdated customerInfo: RevenueCat.CustomerInfo) {
 		KLogger.debug("🛍️ did receive update \(customerInfo)")
 
-		self.delegate?.didRecieveUpdate(CustomerInfo(info: customerInfo))
+		self.delegate?.didReceiveUpdate(CustomerInfo(info: customerInfo))
 	}
 }
 
