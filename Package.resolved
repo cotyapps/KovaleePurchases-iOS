@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/cotyapps/Kovalee-iOS-SDK",
         "state": {
           "branch": null,
-          "revision": "5fd2d8bf1b437d6d281bad1a970ef9a805c7c584",
-          "version": "1.5.5"
+          "revision": "249d9496a6856b82a6a6e46d06e4211eaf545ec9",
+          "version": "1.5.8"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios",
         "state": {
           "branch": null,
-          "revision": "78d2f159d6d647f26ae5a9dd38276ea06403e7ec",
-          "version": "4.25.9"
+          "revision": "815f6dc5d89bb40325ab3e01998e60c5f4b07ffe",
+          "version": "4.31.7"
         }
       }
     ]

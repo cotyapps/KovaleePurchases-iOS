@@ -4,19 +4,19 @@ import KovaleeSDK
 import RevenueCat
 
 class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
-	init(withKeys keys: KovaleeKeys.RevenueCat) {
+    init(withKeys keys: KovaleeKeys.RevenueCat) {
         super.init()
 
-		KLogger.debug("initializing RevenueCat")
+        KLogger.debug("initializing RevenueCat")
 
         Purchases.logLevel = KLogger.logLevel.revenueCatLogLevel()
         Purchases.configure(
             with: RevenueCat.Configuration
-				.builder(withAPIKey: keys.sdkId)
-				.with(observerMode: keys.observerMode)
-				.build()
+                .builder(withAPIKey: keys.sdkId)
+                .with(observerMode: keys.observerMode)
+                .build()
         )
-		Purchases.shared.delegate = self
+        Purchases.shared.delegate = self
     }
 
     func setUserId(userId: String) {
@@ -24,10 +24,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
             try? await Purchases.shared.logIn(userId)
         }
     }
-	
-	func revenueCatUserId() -> String {
-		Purchases.shared.appUserID
-	}
+
+    func revenueCatUserId() -> String {
+        Purchases.shared.appUserID
+    }
 
     func fetchOfferings() async throws -> AbstractOfferings? {
         let rcOfferings = try await Purchases.shared.offerings()
@@ -39,33 +39,33 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     }
 
     func fetchCurrentOffering() async throws -> AbstractOffering? {
-		KLogger.debug("🛍️ Fetching current offering...")
+        KLogger.debug("🛍️ Fetching current offering...")
         let rcOfferings = try await Purchases.shared.offerings()
         guard let current = rcOfferings.current else {
             return nil
         }
 
-		KLogger.debug("🛍️ Fetched current offering \(current)")
+        KLogger.debug("🛍️ Fetched current offering \(current)")
         return Offering(offering: current)
     }
-	
-	func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: Int] {
-		await Purchases.shared
-			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)
-			.mapValues { $0.status.rawValue }
-	}
+
+    func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: Int] {
+        await Purchases.shared
+            .checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)
+            .mapValues { $0.status.rawValue }
+    }
 
     func restorePurchases() async throws -> AbstractCustomerInfo {
-		KLogger.debug("🛍️ Restoring purchase...")
+        KLogger.debug("🛍️ Restoring purchase...")
 
         let rcCustomerInfo = try await Purchases.shared.restorePurchases()
-		KLogger.debug("🛍️ Purchase restored with customer info: \(rcCustomerInfo)")
+        KLogger.debug("🛍️ Purchase restored with customer info: \(rcCustomerInfo)")
 
         return CustomerInfo(info: rcCustomerInfo)
     }
 
     func purchase(package: AbstractPackage) async throws -> AbstractPurchaseResultData {
-		let purchaseResult = try await Purchases.shared.purchase(package: package.rcPackage as! RevenueCat.Package)
+        let purchaseResult = try await Purchases.shared.purchase(package: package.rcPackage as! RevenueCat.Package)
         KLogger.debug("🛍️ Purchase \(purchaseResult)")
 
         return PurchaseResultData(
@@ -75,20 +75,25 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         )
     }
 
-	func purchaseProduct(withId productId: String) async throws -> AbstractPurchaseResultData {
-		guard let product = await Purchases.shared.products([productId]).first else {
-			throw KovaleePurchasesError.noProductWithSpecifiedId
-		}
+    func purchaseProduct(withId productId: String) async throws -> AbstractPurchaseResultData {
+        guard let product = await Purchases.shared.products([productId]).first else {
+            throw KovaleePurchasesError.noProductWithSpecifiedId
+        }
 
-		let purchaseResult = try await Purchases.shared.purchase(product: product)
-		KLogger.debug("🛍️ Purchase \(purchaseResult)")
+        let purchaseResult = try await Purchases.shared.purchase(product: product)
+        KLogger.debug("🛍️ Purchase \(purchaseResult)")
 
-		return PurchaseResultData(
-			transaction: StoreTransaction(transaction: purchaseResult.transaction),
-			customerInfo: CustomerInfo(info: purchaseResult.customerInfo),
-			userCancelled: purchaseResult.userCancelled
-		)
-	}
+        return PurchaseResultData(
+            transaction: StoreTransaction(transaction: purchaseResult.transaction),
+            customerInfo: CustomerInfo(info: purchaseResult.customerInfo),
+            userCancelled: purchaseResult.userCancelled
+        )
+    }
+
+    func syncPurchase() async throws -> AbstractCustomerInfo {
+        let info = try await Purchases.shared.syncPurchases()
+        return CustomerInfo(info: info)
+    }
 
     func customerInfo() async throws -> AbstractCustomerInfo {
         let info = try await Purchases.shared.customerInfo()
@@ -102,35 +107,35 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
     func setAmplitudeUserId(userId: String) {
         Purchases.shared.attribution.setAttributes(["$amplitudeUserId": userId])
     }
-	
-	func setPurchaseDelegate(_ delegate: KovaleeFramework.KovaleePurchasesDelegate) {
-		self.delegate = delegate
-	}
-	
-	private var delegate: KovaleeFramework.KovaleePurchasesDelegate?
+
+    func setPurchaseDelegate(_ delegate: KovaleeFramework.KovaleePurchasesDelegate) {
+        self.delegate = delegate
+    }
+
+    private var delegate: KovaleeFramework.KovaleePurchasesDelegate?
 }
 
 extension RevenueCatWrapperImpl: RevenueCat.PurchasesDelegate {
-	func purchases(_ purchases: Purchases, receivedUpdated customerInfo: RevenueCat.CustomerInfo) {
-		KLogger.debug("🛍️ did receive update \(customerInfo)")
+    func purchases(_: Purchases, receivedUpdated customerInfo: RevenueCat.CustomerInfo) {
+        KLogger.debug("🛍️ did receive update \(customerInfo)")
 
-		self.delegate?.didReceiveUpdate(CustomerInfo(info: customerInfo))
-	}
+        delegate?.didReceiveUpdate(CustomerInfo(info: customerInfo))
+    }
 }
 
 public enum KovaleePurchasesError: Error {
-	case noProductWithSpecifiedId
+    case noProductWithSpecifiedId
 }
 
 extension KovaleeFramework.LogLevel {
     func revenueCatLogLevel() -> RevenueCat.LogLevel {
-        RevenueCat.LogLevel(rawValue: self.rawValue) ?? .debug
+        RevenueCat.LogLevel(rawValue: rawValue) ?? .debug
     }
 }
 
 extension RevenueCat.SubscriptionPeriod {
     func getDuration() -> Int {
-        switch self.unit {
+        switch unit {
         case .day:
             return 1
         case .month:

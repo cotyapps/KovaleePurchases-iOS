@@ -5,7 +5,6 @@ import RevenueCat
 // swiftlint:disable file_length
 /// A container for the most recent customer info
 public class CustomerInfo: AbstractCustomerInfo, Encodable {
-
     /// ``EntitlementInfos`` attached to this customer info.
     public let entitlements: EntitlementInfos
 
@@ -46,22 +45,21 @@ public class CustomerInfo: AbstractCustomerInfo, Encodable {
     public let originalPurchaseDate: Date?
 
     init(info: RevenueCat.CustomerInfo) {
-        self.entitlements = EntitlementInfos(entitlements: info.entitlements)
-        self.activeSubscriptions = info.activeSubscriptions
-        self.allPurchasedProductIdentifiers = info.allPurchasedProductIdentifiers
-        self.latestExpirationDate = info.latestExpirationDate
-        self.nonSubscriptions = info.nonSubscriptions.map { NonSubscriptionTransaction(transaction: $0) }
-        self.requestDate = info.requestDate
-        self.firstSeen = info.firstSeen
-        self.originalAppUserId = info.originalAppUserId
-        self.managementURL = info.managementURL
-        self.originalPurchaseDate = info.originalPurchaseDate
+        entitlements = EntitlementInfos(entitlements: info.entitlements)
+        activeSubscriptions = info.activeSubscriptions
+        allPurchasedProductIdentifiers = info.allPurchasedProductIdentifiers
+        latestExpirationDate = info.latestExpirationDate
+        nonSubscriptions = info.nonSubscriptions.map { NonSubscriptionTransaction(transaction: $0) }
+        requestDate = info.requestDate
+        firstSeen = info.firstSeen
+        originalAppUserId = info.originalAppUserId
+        managementURL = info.managementURL
+        originalPurchaseDate = info.originalPurchaseDate
     }
 }
 
 /// This class contains all the entitlements associated to the user.
 public class EntitlementInfos: NSObject, Encodable {
-
     /**
      Dictionary of all EntitlementInfo (``EntitlementInfo``) objects (active and inactive) keyed by entitlement
      identifier. This dictionary can also be accessed by using an index subscript on ``EntitlementInfos``, e.g.
@@ -70,19 +68,38 @@ public class EntitlementInfos: NSObject, Encodable {
     public let all: [String: EntitlementInfo]
 
     public subscript(key: String) -> EntitlementInfo? {
-        return self.all[key]
+        return all[key]
     }
 
     init(entitlements: RevenueCat.EntitlementInfos) {
-        self.all = entitlements.all.reduce(into: [String: EntitlementInfo]()) { all, entitlement in
+        all = entitlements.all.reduce(into: [String: EntitlementInfo]()) { all, entitlement in
             all[entitlement.key] = EntitlementInfo(info: entitlement.value)
         }
     }
 }
 
+public extension EntitlementInfos {
+    /// Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+    /// - Warning: this is equivalent to ``activeInAnyEnvironment``
+    ///
+    /// #### Related Symbols
+    /// - ``activeInCurrentEnvironment``
+    @objc var active: [String: EntitlementInfo] {
+        return activeInAnyEnvironment
+    }
+
+    /// Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+    /// - Note: these can be active on any environment.
+    ///
+    /// #### Related Symbols
+    /// - ``activeInCurrentEnvironment``
+    @objc var activeInAnyEnvironment: [String: EntitlementInfo] {
+        return all.filter { $0.value.isActiveInAnyEnvironment }
+    }
+}
+
 ///  The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
 public class EntitlementInfo: NSObject, Encodable {
-
     /// The entitlement identifier configured in the RevenueCat dashboard
     public var identifier: String
 
@@ -102,7 +119,7 @@ public class EntitlementInfo: NSObject, Encodable {
     public var originalPurchaseDate: Date?
 
     /// The expiration date for the entitlement, can be `nil` for lifetime access.
-     /// If the ``periodType`` is ``PeriodType/trial``, this is the trial expiration date.
+    /// If the ``periodType`` is ``PeriodType/trial``, this is the trial expiration date.
     public var expirationDate: Date?
 
     /// The store where this entitlement was unlocked from
@@ -130,25 +147,34 @@ public class EntitlementInfo: NSObject, Encodable {
     public var ownershipType: PurchaseOwnershipType
 
     init(info: RevenueCat.EntitlementInfo) {
-        self.identifier = info.identifier
-        self.isActive = info.isActive
-        self.willRenew = info.willRenew
-        self.periodType = PeriodType(rawValue: info.periodType.rawValue)!
-        self.latestPurchaseDate = info.latestPurchaseDate
-        self.originalPurchaseDate = info.originalPurchaseDate
-        self.expirationDate = info.expirationDate
-        self.store = Store(rawValue: info.store.rawValue)!
-        self.productIdentifier = info.productIdentifier
-        self.isSandbox = info.isSandbox
-        self.unsubscribeDetectedAt = info.unsubscribeDetectedAt
-        self.billingIssueDetectedAt = info.billingIssueDetectedAt
-        self.ownershipType = PurchaseOwnershipType(rawValue: info.ownershipType.rawValue)!
+        identifier = info.identifier
+        isActive = info.isActive
+        willRenew = info.willRenew
+        periodType = PeriodType(rawValue: info.periodType.rawValue)!
+        latestPurchaseDate = info.latestPurchaseDate
+        originalPurchaseDate = info.originalPurchaseDate
+        expirationDate = info.expirationDate
+        store = Store(rawValue: info.store.rawValue)!
+        productIdentifier = info.productIdentifier
+        isSandbox = info.isSandbox
+        unsubscribeDetectedAt = info.unsubscribeDetectedAt
+        billingIssueDetectedAt = info.billingIssueDetectedAt
+        ownershipType = PurchaseOwnershipType(rawValue: info.ownershipType.rawValue)!
+    }
+}
+
+public extension EntitlementInfo {
+    /// True if the user has access to this entitlement in any environment.
+    ///
+    /// #### Related Symbols
+    /// - ``isActiveInCurrentEnvironment``
+    @objc var isActiveInAnyEnvironment: Bool {
+        return isActive
     }
 }
 
 /// Information that represents a non-subscription purchase made by a user.
 public class NonSubscriptionTransaction: NSObject, Encodable {
-
     /// The product identifier.
     public let productIdentifier: String
 
@@ -159,9 +185,9 @@ public class NonSubscriptionTransaction: NSObject, Encodable {
     public let transactionIdentifier: String
 
     init(transaction: RevenueCat.NonSubscriptionTransaction) {
-        self.productIdentifier = transaction.productIdentifier
-        self.purchaseDate = transaction.purchaseDate
-        self.transactionIdentifier = transaction.transactionIdentifier
+        productIdentifier = transaction.productIdentifier
+        purchaseDate = transaction.purchaseDate
+        transactionIdentifier = transaction.transactionIdentifier
     }
 }
 
@@ -219,16 +245,16 @@ public class Product: Encodable {
     var billingIssueDetectedAt: Date?
 
     init(entitlement: RevenueCat.EntitlementInfo) {
-        self.identifier = entitlement.identifier
-        self.isActive = entitlement.isActive
-        self.willRenew = entitlement.willRenew
-        self.latestPurchaseDate = entitlement.latestPurchaseDate
-        self.originalPurchaseDate = entitlement.originalPurchaseDate
-        self.expirationDate = entitlement.expirationDate
-        self.productIdentifier = entitlement.productIdentifier
-        self.isSandbox = entitlement.isSandbox
-        self.unsubscribeDetectedAt = entitlement.unsubscribeDetectedAt
-        self.billingIssueDetectedAt = entitlement.billingIssueDetectedAt
+        identifier = entitlement.identifier
+        isActive = entitlement.isActive
+        willRenew = entitlement.willRenew
+        latestPurchaseDate = entitlement.latestPurchaseDate
+        originalPurchaseDate = entitlement.originalPurchaseDate
+        expirationDate = entitlement.expirationDate
+        productIdentifier = entitlement.productIdentifier
+        isSandbox = entitlement.isSandbox
+        unsubscribeDetectedAt = entitlement.unsubscribeDetectedAt
+        billingIssueDetectedAt = entitlement.billingIssueDetectedAt
     }
 }
 
@@ -237,17 +263,16 @@ public struct Offerings: AbstractOfferings, Encodable {
     public var current: Offering?
 
     init(_ offerings: RevenueCat.Offerings) {
-        self.all = offerings.all.reduce(into: [String: Offering]()) { all, offering in
-                all[offering.key] = Offering(offering: offering.value)
-            }
-        self.current = offerings.current != nil ? Offering(offering: offerings.current!) : nil
+        all = offerings.all.reduce(into: [String: Offering]()) { all, offering in
+            all[offering.key] = Offering(offering: offering.value)
+        }
+        current = offerings.current != nil ? Offering(offering: offerings.current!) : nil
     }
 }
 
 /// An offering is a collection of ``Package``s, and they let you control which products
 /// are shown to users without requiring an app update.
 public class Offering: AbstractOffering, Encodable {
-
     /// Unique identifier defined in RevenueCat dashboard.
     public let identifier: String
 
@@ -256,9 +281,9 @@ public class Offering: AbstractOffering, Encodable {
 
     /// Array of ``Package`` objects available for purchase.
     public let availablePackages: [Package]
-	
-	/// Offering metadata defined in RevenueCat dashboard.
-	public let metadata: [String: Any]
+
+    /// Offering metadata defined in RevenueCat dashboard.
+    public let metadata: [String: Any]
 
     /// Lifetime ``Package`` type configured in the RevenueCat dashboard, if available.
     public let lifetime: Package?
@@ -282,64 +307,61 @@ public class Offering: AbstractOffering, Encodable {
     public let weekly: Package?
 
     init(offering: RevenueCat.Offering) {
-        self.identifier = offering.identifier
-        self.serverDescription = offering.serverDescription
-        self.availablePackages = offering.availablePackages.compactMap { Package(package: $0) }
-		self.metadata = offering.metadata
-        self.lifetime = Package(package: offering.lifetime)
-        self.annual = Package(package: offering.annual)
-        self.sixMonth = Package(package: offering.sixMonth)
-        self.threeMonth = Package(package: offering.threeMonth)
-        self.twoMonth = Package(package: offering.twoMonth)
-        self.monthly = Package(package: offering.monthly)
-        self.weekly = Package(package: offering.weekly)
+        identifier = offering.identifier
+        serverDescription = offering.serverDescription
+        availablePackages = offering.availablePackages.compactMap { Package(package: $0) }
+        metadata = offering.metadata
+        lifetime = Package(package: offering.lifetime)
+        annual = Package(package: offering.annual)
+        sixMonth = Package(package: offering.sixMonth)
+        threeMonth = Package(package: offering.threeMonth)
+        twoMonth = Package(package: offering.twoMonth)
+        monthly = Package(package: offering.monthly)
+        weekly = Package(package: offering.weekly)
     }
-	
-	enum CodingKeys: String, CodingKey {
-		case identifier
-		case serverDescription
-		case availablePackages
-		case metadata
-		case lifetime
-		case annual
-		case sixMonth
-		case threeMonth
-		case twoMonth
-		case monthly
-		case weekly
-	}
 
-	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
+    enum CodingKeys: String, CodingKey {
+        case identifier
+        case serverDescription
+        case availablePackages
+        case metadata
+        case lifetime
+        case annual
+        case sixMonth
+        case threeMonth
+        case twoMonth
+        case monthly
+        case weekly
+    }
 
-		try container.encode(identifier, forKey: .identifier)
-		try container.encode(serverDescription, forKey: .serverDescription)
-		try container.encode(availablePackages, forKey: .availablePackages)
-//		try container.encode(metadata, forKey: .metadata)
-		try container.encode(lifetime, forKey: .lifetime)
-		try container.encode(annual, forKey: .annual)
-		try container.encode(sixMonth, forKey: .sixMonth)
-		try container.encode(threeMonth, forKey: .threeMonth)
-		try container.encode(twoMonth, forKey: .twoMonth)
-		try container.encode(monthly, forKey: .monthly)
-		try container.encode(weekly, forKey: .weekly)
-	}
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(serverDescription, forKey: .serverDescription)
+        try container.encode(availablePackages, forKey: .availablePackages)
+        //		try container.encode(metadata, forKey: .metadata)
+        try container.encode(lifetime, forKey: .lifetime)
+        try container.encode(annual, forKey: .annual)
+        try container.encode(sixMonth, forKey: .sixMonth)
+        try container.encode(threeMonth, forKey: .threeMonth)
+        try container.encode(twoMonth, forKey: .twoMonth)
+        try container.encode(monthly, forKey: .monthly)
+        try container.encode(weekly, forKey: .weekly)
+    }
 }
 
-
-extension Offering {
-
-	/**
-	 - Returns: the `metadata` value associated to `key` for the expected type,
-	 or `default` if not found, or it's not the expected type.
-	 */
-	public func getMetadataValue<T>(for key: String, default: T) -> T {
-		guard let rawValue = self.metadata[key], let value = rawValue as? T else {
-			return `default`
-		}
-		return value
-	}
-
+public extension Offering {
+    /**
+     - Returns: the `metadata` value associated to `key` for the expected type,
+     or `default` if not found, or it's not the expected type.
+     */
+    func getMetadataValue<T>(for key: String, default: T) -> T {
+        guard let rawValue = metadata[key], let value = rawValue as? T else {
+            return `default`
+        }
+        return value
+    }
 }
 
 /// Packages help abstract platform-specific products by grouping equivalent products across iOS, Android, and web.
@@ -349,10 +371,10 @@ public class Package: Identifiable, AbstractPackage, Encodable {
         identifier
     }
 
-	public var productIdentifier: String {
-		storeProduct.productIdentifier
-	}
-	
+    public var productIdentifier: String {
+        storeProduct.productIdentifier
+    }
+
     /// The identifier for this Package.
     public let identifier: String
 
@@ -378,55 +400,55 @@ public class Package: Identifiable, AbstractPackage, Encodable {
         guard let package else {
             return nil
         }
-        self.identifier = package.identifier
-        self.packageType = PackageType(rawValue: package.packageType.rawValue) ?? .unknown
-        self.storeProduct = StoreProduct(package.storeProduct)
-        self.offeringIdentifier = package.offeringIdentifier
-        self.localizedPriceString = package.localizedPriceString
-        self.localizedIntroductoryPriceString = package.localizedIntroductoryPriceString
-        self.rcPackage = package
+        identifier = package.identifier
+        packageType = PackageType(rawValue: package.packageType.rawValue) ?? .unknown
+        storeProduct = StoreProduct(package.storeProduct)
+        offeringIdentifier = package.offeringIdentifier
+        localizedPriceString = package.localizedPriceString
+        localizedIntroductoryPriceString = package.localizedIntroductoryPriceString
+        rcPackage = package
     }
 
-	enum CodingKeys: String, CodingKey {
-		case identifier
-		case packageType
-		case storeProduct
-		case offeringIdentifier
-		case localizedPriceString
-		case localizedIntroductoryPriceString
-		case rcPackage
-	}
+    enum CodingKeys: String, CodingKey {
+        case identifier
+        case packageType
+        case storeProduct
+        case offeringIdentifier
+        case localizedPriceString
+        case localizedIntroductoryPriceString
+        case rcPackage
+    }
 
-	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
-		try container.encode(identifier, forKey: .identifier)
-		try container.encode(packageType, forKey: .packageType)
-		try container.encode(storeProduct, forKey: .storeProduct)
-		try container.encode(offeringIdentifier, forKey: .offeringIdentifier)
-		try container.encode(localizedPriceString, forKey: .localizedPriceString)
-		try container.encode(localizedIntroductoryPriceString, forKey: .localizedIntroductoryPriceString)
-//		try container.encode(rcPackage, forKey: .rcPackage)
-	}
-	
-	internal required init() {
-		self.identifier = "0"
-		self.packageType = .unknown
-		self.storeProduct = StoreProduct.empty()
-		self.offeringIdentifier = ""
-		self.localizedPriceString = ""
-		self.localizedIntroductoryPriceString = nil
-		self.rcPackage = false
-	}
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(packageType, forKey: .packageType)
+        try container.encode(storeProduct, forKey: .storeProduct)
+        try container.encode(offeringIdentifier, forKey: .offeringIdentifier)
+        try container.encode(localizedPriceString, forKey: .localizedPriceString)
+        try container.encode(localizedIntroductoryPriceString, forKey: .localizedIntroductoryPriceString)
+        //		try container.encode(rcPackage, forKey: .rcPackage)
+    }
 
-	/// Generates an empty Package
-	/// To use only for testing purposes
-	static public func empty() -> Package {
-		self.init()
-	}
-	
+    internal required init() {
+        identifier = "0"
+        packageType = .unknown
+        storeProduct = StoreProduct.empty()
+        offeringIdentifier = ""
+        localizedPriceString = ""
+        localizedIntroductoryPriceString = nil
+        rcPackage = false
+    }
+
+    /// Generates an empty Package
+    /// To use only for testing purposes
+    public static func empty() -> Package {
+        self.init()
+    }
+
     public func getDuration() -> Int {
-		guard let subscriptionPeriod = (self.rcPackage as! RevenueCat.Package).storeProduct.subscriptionPeriod else {
+        guard let subscriptionPeriod = (rcPackage as! RevenueCat.Package).storeProduct.subscriptionPeriod else {
             return 0
         }
 
@@ -445,158 +467,158 @@ public class Package: Identifiable, AbstractPackage, Encodable {
 
 /// Type that provides access to all of `StoreKit`'s product type's properties.
 public struct StoreProduct: Encodable {
-	
-	/// The type of product.
-	public var productType: ProductType
-	
-	/// The category of this product, whether a subscription or a one-time purchase.
-	public var productCategory: ProductCategory
-	
-	/// A description of the product.
-	/// - Note: The title's language is determined by the storefront that the user's device is connected to,
-	/// not the preferred language set on the device.
-	public var localizedDescription: String
-	
-	/// The name of the product.
-	public var localizedTitle: String
-	
-	/// The currency of the product's price.
-	public var currencyCode: String?
-	
-	/// The decimal representation of the cost of the product, in local currency.
-	public var price: Decimal
-	
-	/// The price of this product using ``priceFormatter``.
-	public var localizedPriceString: String
-	
-	/// The string that identifies the product to the Apple App Store.
-	public var productIdentifier: String
-	
-	/// A Boolean value that indicates whether the product is available for family sharing in App Store Connect.
-	/// Check the value of `isFamilyShareable` to learn whether an in-app purchase is sharable with the family group.
-	///
-	/// When displaying in-app purchases in your app, indicate whether the product includes Family Sharing
-	/// to help customers make a selection that best fits their needs.
-	///
-	/// Configure your in-app purchases to allow Family Sharing in App Store Connect.
-	/// For more information about setting up Family Sharing, see Turn-on Family Sharing for in-app purchases.
-	public var isFamilyShareable: Bool
-	
-	/// The identifier of the subscription group to which the subscription belongs.
-	/// All auto-renewable subscriptions must be a part of a group.
-	/// You create the group identifiers in App Store Connect.
-	/// This property is `nil` if the product is not an auto-renewable subscription.
-	public var subscriptionGroupIdentifier: String?
-	
-	/// Provides a `NumberFormatter`, useful for formatting the price for displaying.
-	/// - Note: This creates a new formatter for every product, which can be slow.
-	/// - Returns: `nil` for StoreKit 2 backed products if the currency code could not be determined.
-	public var priceFormatter: NumberFormatter?
-	
-	/// The period details for products that are subscriptions.
-	/// - Returns: `nil` if the product is not a subscription.
-	public var subscriptionPeriod: SubscriptionPeriod?
-	
-	/// The object containing introductory price information for the product.
-	/// If you've set up introductory prices in App Store Connect, the introductory price property will be populated.
-	/// This property is `nil` if the product has no introductory price.
-	///
-	/// Before displaying UI that offers the introductory price,
-	/// you must first determine if the user is eligible to receive it.
-	public var introductoryDiscount: StoreProductDiscount?
-	
-	/// An array of subscription offers available for the auto-renewable subscription.
-	/// - Note: the current user may or may not be eligible for some of these.
-	public var discounts: [StoreProductDiscount]
-	
-	init(_ product: RevenueCat.StoreProduct) {
-		self.productType = ProductType(rawValue: product.productType.rawValue)!
-		self.productCategory = ProductCategory(rawValue: product.productCategory.rawValue)!
-		self.localizedDescription = product.localizedDescription
-		self.localizedTitle = product.localizedTitle
-		self.currencyCode = product.currencyCode
-		self.price = product.price
-		self.localizedPriceString = product.localizedPriceString
-		self.productIdentifier = product.productIdentifier
-		self.isFamilyShareable = product.isFamilyShareable
-		self.subscriptionGroupIdentifier = product.subscriptionGroupIdentifier
-		self.priceFormatter = product.priceFormatter
-		self.subscriptionPeriod = product.subscriptionPeriod != nil ?
-		SubscriptionPeriod(product.subscriptionPeriod!) : nil
-		self.introductoryDiscount = StoreProductDiscount(product.introductoryDiscount)
-		self.discounts = product.discounts.compactMap { StoreProductDiscount($0) }
-	}
+    /// The type of product.
+    public var productType: ProductType
 
-	enum CodingKeys: String, CodingKey {
-		case productType
-		case productCategory
-		case localizedDescription
-		case localizedTitle
-		case currencyCode
-		case price
-		case localizedPriceString
-		case productIdentifier
-		case isFamilyShareable
-		case subscriptionGroupIdentifier
-		case priceFormatter
-		case subscriptionPeriod
-		case introductoryDiscount
-		case discounts
-	}
-	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
+    /// The category of this product, whether a subscription or a one-time purchase.
+    public var productCategory: ProductCategory
 
-		try container.encode(productType, forKey: .productType)
-		try container.encode(productCategory, forKey: .productCategory)
-		try container.encode(localizedDescription, forKey: .localizedDescription)
-		try container.encode(localizedTitle, forKey: .localizedTitle)
-		try container.encode(currencyCode, forKey: .currencyCode)
-		try container.encode(price, forKey: .price)
-		try container.encode(localizedPriceString, forKey: .localizedPriceString)
+    /// A description of the product.
+    /// - Note: The title's language is determined by the storefront that the user's device is connected to,
+    /// not the preferred language set on the device.
+    public var localizedDescription: String
 
-		try container.encode(productIdentifier, forKey: .productIdentifier)
-		try container.encode(isFamilyShareable, forKey: .isFamilyShareable)
-		try container.encode(subscriptionGroupIdentifier, forKey: .subscriptionGroupIdentifier)
+    /// The name of the product.
+    public var localizedTitle: String
 
-		try container.encode(subscriptionPeriod, forKey: .subscriptionPeriod)
-		try container.encode(introductoryDiscount, forKey: .introductoryDiscount)
-		try container.encode(discounts, forKey: .discounts)
-	}
-	
-	private init() {
-		self.productType = .consumable
-		self.productCategory = .subscription
-		self.localizedDescription = ""
-		self.localizedTitle = ""
-		self.currencyCode = nil
-		self.price = 0
-		self.localizedPriceString = ""
-		self.productIdentifier = ""
-		self.isFamilyShareable = false
-		self.subscriptionGroupIdentifier = nil
-		self.priceFormatter = nil
-		self.subscriptionPeriod = nil
-		self.introductoryDiscount = nil
-		self.discounts = []
-	}
-	
-	static func empty() -> Self {
-		self.init()
-	}
+    /// The currency of the product's price.
+    public var currencyCode: String?
+
+    /// The decimal representation of the cost of the product, in local currency.
+    public var price: Decimal
+
+    /// The price of this product using ``priceFormatter``.
+    public var localizedPriceString: String
+
+    /// The string that identifies the product to the Apple App Store.
+    public var productIdentifier: String
+
+    /// A Boolean value that indicates whether the product is available for family sharing in App Store Connect.
+    /// Check the value of `isFamilyShareable` to learn whether an in-app purchase is sharable with the family group.
+    ///
+    /// When displaying in-app purchases in your app, indicate whether the product includes Family Sharing
+    /// to help customers make a selection that best fits their needs.
+    ///
+    /// Configure your in-app purchases to allow Family Sharing in App Store Connect.
+    /// For more information about setting up Family Sharing, see Turn-on Family Sharing for in-app purchases.
+    public var isFamilyShareable: Bool
+
+    /// The identifier of the subscription group to which the subscription belongs.
+    /// All auto-renewable subscriptions must be a part of a group.
+    /// You create the group identifiers in App Store Connect.
+    /// This property is `nil` if the product is not an auto-renewable subscription.
+    public var subscriptionGroupIdentifier: String?
+
+    /// Provides a `NumberFormatter`, useful for formatting the price for displaying.
+    /// - Note: This creates a new formatter for every product, which can be slow.
+    /// - Returns: `nil` for StoreKit 2 backed products if the currency code could not be determined.
+    public var priceFormatter: NumberFormatter?
+
+    /// The period details for products that are subscriptions.
+    /// - Returns: `nil` if the product is not a subscription.
+    public var subscriptionPeriod: SubscriptionPeriod?
+
+    /// The object containing introductory price information for the product.
+    /// If you've set up introductory prices in App Store Connect, the introductory price property will be populated.
+    /// This property is `nil` if the product has no introductory price.
+    ///
+    /// Before displaying UI that offers the introductory price,
+    /// you must first determine if the user is eligible to receive it.
+    public var introductoryDiscount: StoreProductDiscount?
+
+    /// An array of subscription offers available for the auto-renewable subscription.
+    /// - Note: the current user may or may not be eligible for some of these.
+    public var discounts: [StoreProductDiscount]
+
+    init(_ product: RevenueCat.StoreProduct) {
+        productType = ProductType(rawValue: product.productType.rawValue)!
+        productCategory = ProductCategory(rawValue: product.productCategory.rawValue)!
+        localizedDescription = product.localizedDescription
+        localizedTitle = product.localizedTitle
+        currencyCode = product.currencyCode
+        price = product.price
+        localizedPriceString = product.localizedPriceString
+        productIdentifier = product.productIdentifier
+        isFamilyShareable = product.isFamilyShareable
+        subscriptionGroupIdentifier = product.subscriptionGroupIdentifier
+        priceFormatter = product.priceFormatter
+        subscriptionPeriod = product.subscriptionPeriod != nil ?
+            SubscriptionPeriod(product.subscriptionPeriod!) : nil
+        introductoryDiscount = StoreProductDiscount(product.introductoryDiscount)
+        discounts = product.discounts.compactMap { StoreProductDiscount($0) }
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case productType
+        case productCategory
+        case localizedDescription
+        case localizedTitle
+        case currencyCode
+        case price
+        case localizedPriceString
+        case productIdentifier
+        case isFamilyShareable
+        case subscriptionGroupIdentifier
+        case priceFormatter
+        case subscriptionPeriod
+        case introductoryDiscount
+        case discounts
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(productType, forKey: .productType)
+        try container.encode(productCategory, forKey: .productCategory)
+        try container.encode(localizedDescription, forKey: .localizedDescription)
+        try container.encode(localizedTitle, forKey: .localizedTitle)
+        try container.encode(currencyCode, forKey: .currencyCode)
+        try container.encode(price, forKey: .price)
+        try container.encode(localizedPriceString, forKey: .localizedPriceString)
+
+        try container.encode(productIdentifier, forKey: .productIdentifier)
+        try container.encode(isFamilyShareable, forKey: .isFamilyShareable)
+        try container.encode(subscriptionGroupIdentifier, forKey: .subscriptionGroupIdentifier)
+
+        try container.encode(subscriptionPeriod, forKey: .subscriptionPeriod)
+        try container.encode(introductoryDiscount, forKey: .introductoryDiscount)
+        try container.encode(discounts, forKey: .discounts)
+    }
+
+    private init() {
+        productType = .consumable
+        productCategory = .subscription
+        localizedDescription = ""
+        localizedTitle = ""
+        currencyCode = nil
+        price = 0
+        localizedPriceString = ""
+        productIdentifier = ""
+        isFamilyShareable = false
+        subscriptionGroupIdentifier = nil
+        priceFormatter = nil
+        subscriptionPeriod = nil
+        introductoryDiscount = nil
+        discounts = []
+    }
+
+    static func empty() -> Self {
+        self.init()
+    }
 }
 
-extension StoreProduct {
-	/// Calculates the price of this subscription product per month.
-	/// - Returns: `nil` if the product is not a subscription.
-	public var pricePerMonth: NSDecimalNumber? {
-		return self.subscriptionPeriod?.pricePerMonth(withTotalPrice: self.price) as NSDecimalNumber?
-	}
+public extension StoreProduct {
+    /// Calculates the price of this subscription product per month.
+    /// - Returns: `nil` if the product is not a subscription.
+    var pricePerMonth: NSDecimalNumber? {
+        return subscriptionPeriod?.pricePerMonth(withTotalPrice: price) as NSDecimalNumber?
+    }
 
-	/// Calculates the price of this subscription product per year.
-	/// - Returns: `nil` if the product is not a subscription.
-	public var pricePerYear: NSDecimalNumber? {
-		return self.subscriptionPeriod?.pricePerYear(withTotalPrice: self.price) as NSDecimalNumber?
-	}
+    /// Calculates the price of this subscription product per year.
+    /// - Returns: `nil` if the product is not a subscription.
+    var pricePerYear: NSDecimalNumber? {
+        return subscriptionPeriod?.pricePerYear(withTotalPrice: price) as NSDecimalNumber?
+    }
 }
 
 public enum ProductCategory: Int, Encodable {
@@ -635,64 +657,62 @@ public struct SubscriptionPeriod: Encodable {
     }
 
     init(_ period: RevenueCat.SubscriptionPeriod) {
-        self.value = period.value
-        self.unit = Unit(rawValue: period.unit.rawValue)!
+        value = period.value
+        unit = Unit(rawValue: period.unit.rawValue)!
     }
-	
-	func pricePerMonth(withTotalPrice price: Decimal) -> Decimal {
-		return self.pricePerPeriod(for: self.unitsPerMonth, totalPrice: price)
-	}
 
-	func pricePerYear(withTotalPrice price: Decimal) -> Decimal {
-		return self.pricePerPeriod(for: self.unitsPerYear, totalPrice: price)
-	}
+    func pricePerMonth(withTotalPrice price: Decimal) -> Decimal {
+        return pricePerPeriod(for: unitsPerMonth, totalPrice: price)
+    }
 
-	private var unitsPerMonth: Decimal {
-		switch self.unit {
-		case .day: return 1 / 30
-		case .week: return 1 / 4
-		case .month: return 1
-		case .year: return 12
-		}
-	}
+    func pricePerYear(withTotalPrice price: Decimal) -> Decimal {
+        return pricePerPeriod(for: unitsPerYear, totalPrice: price)
+    }
 
-	private var unitsPerYear: Decimal {
-		switch self.unit {
-		case .day: return 1 / 365
-		case .week: return 1 / 52.14 // Number of weeks in a year
-		case .month: return 1 / 12
-		case .year: return 1
-		}
-	}
+    private var unitsPerMonth: Decimal {
+        switch unit {
+        case .day: return 1 / 30
+        case .week: return 1 / 4
+        case .month: return 1
+        case .year: return 12
+        }
+    }
 
-	private func pricePerPeriod(for units: Decimal, totalPrice: Decimal) -> Decimal {
-		let periods: Decimal = units * Decimal(self.value)
+    private var unitsPerYear: Decimal {
+        switch unit {
+        case .day: return 1 / 365
+        case .week: return 1 / 52.14 // Number of weeks in a year
+        case .month: return 1 / 12
+        case .year: return 1
+        }
+    }
 
-		return (totalPrice as NSDecimalNumber)
-			.dividing(by: periods as NSDecimalNumber,
-					  withBehavior: Self.roundingBehavior) as Decimal
-	}
+    private func pricePerPeriod(for units: Decimal, totalPrice: Decimal) -> Decimal {
+        let periods: Decimal = units * Decimal(value)
 
-	private static let roundingBehavior = NSDecimalNumberHandler(
-		roundingMode: .down,
-		scale: 2,
-		raiseOnExactness: false,
-		raiseOnOverflow: false,
-		raiseOnUnderflow: false,
-		raiseOnDivideByZero: false
-	)
+        return (totalPrice as NSDecimalNumber)
+            .dividing(by: periods as NSDecimalNumber,
+                      withBehavior: Self.roundingBehavior) as Decimal
+    }
+
+    private static let roundingBehavior = NSDecimalNumberHandler(
+        roundingMode: .down,
+        scale: 2,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
 }
 
 public struct StoreProductDiscount: Encodable {
     public enum PaymentMode: Int, Encodable {
-
         /// Price is charged one or more times
         case payAsYouGo = 0
         /// Price is charged once in advance
         case payUpFront = 1
         /// No initial charge
         case freeTrial = 2
-
     }
 
     public enum DiscountType: Int, Encodable {
@@ -716,37 +736,36 @@ public struct StoreProductDiscount: Encodable {
             return nil
         }
 
-        self.offerIdentifier = discount.offerIdentifier
-        self.currencyCode = discount.currencyCode
-        self.price = discount.price
-        self.localizedPriceString = discount.localizedPriceString
-        self.paymentMode = PaymentMode(rawValue: discount.paymentMode.rawValue)!
-        self.subscriptionPeriod = SubscriptionPeriod(discount.subscriptionPeriod)
-        self.numberOfPeriods = discount.numberOfPeriods
-        self.type = DiscountType(rawValue: discount.type.rawValue)!
+        offerIdentifier = discount.offerIdentifier
+        currencyCode = discount.currencyCode
+        price = discount.price
+        localizedPriceString = discount.localizedPriceString
+        paymentMode = PaymentMode(rawValue: discount.paymentMode.rawValue)!
+        subscriptionPeriod = SubscriptionPeriod(discount.subscriptionPeriod)
+        numberOfPeriods = discount.numberOfPeriods
+        type = DiscountType(rawValue: discount.type.rawValue)!
     }
 }
 
 public enum PackageType: Int, Encodable {
-
     /// A package that was defined with an unknown identifier.
     case unknown = -2,
-    /// A package that was defined with a custom identifier.
-    custom,
-    /// A package configured with the predefined lifetime identifier.
-    lifetime,
-    /// A package configured with the predefined annual identifier.
-    annual,
-    /// A package configured with the predefined six month identifier.
-    sixMonth,
-    /// A package configured with the predefined three month identifier.
-    threeMonth,
-    /// A package configured with the predefined two month identifier.
-    twoMonth,
-    /// A package configured with the predefined monthly identifier.
-    monthly,
-    /// A package configured with the predefined weekly identifier.
-    weekly
+         /// A package that was defined with a custom identifier.
+         custom,
+         /// A package configured with the predefined lifetime identifier.
+         lifetime,
+         /// A package configured with the predefined annual identifier.
+         annual,
+         /// A package configured with the predefined six month identifier.
+         sixMonth,
+         /// A package configured with the predefined three month identifier.
+         threeMonth,
+         /// A package configured with the predefined two month identifier.
+         twoMonth,
+         /// A package configured with the predefined monthly identifier.
+         monthly,
+         /// A package configured with the predefined weekly identifier.
+         weekly
 }
 
 public struct StoreTransaction: Encodable {
@@ -759,10 +778,10 @@ public struct StoreTransaction: Encodable {
         guard let transaction else {
             return nil
         }
-        self.productIdentifier = transaction.productIdentifier
-        self.purchaseDate = transaction.purchaseDate
-        self.transactionIdentifier = transaction.transactionIdentifier
-        self.quantity = transaction.quantity
+        productIdentifier = transaction.productIdentifier
+        purchaseDate = transaction.purchaseDate
+        transactionIdentifier = transaction.transactionIdentifier
+        quantity = transaction.quantity
     }
 }
 
@@ -773,9 +792,10 @@ public struct PurchaseResultData: AbstractPurchaseResultData, Encodable {
 }
 
 public enum IntroEligibilityStatus: Int {
-	case unknown = 0
-	case ineligible
-	case eligible
-	case noIntroOfferExists
+    case unknown = 0
+    case ineligible
+    case eligible
+    case noIntroOfferExists
 }
+
 // swiftlint:enable file_length

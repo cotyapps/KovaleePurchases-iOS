@@ -3,99 +3,107 @@ import KovaleeFramework
 import KovaleeSDK
 
 extension PurchaseManagerCreator: Creator {
-	public func createImplementation(
-		withConfiguration configuration: Configuration,
-		andKeys keys: KovaleeKeys
-	) -> Manager {
-		guard let key = keys.revenueCat else {
-			fatalError("No configuration Key for RevenueCat found in the Keys file")
-		}
+    public func createImplementation(
+        withConfiguration _: Configuration,
+        andKeys keys: KovaleeKeys
+    ) -> Manager {
+        guard let key = keys.revenueCat else {
+            fatalError("No configuration Key for RevenueCat found in the Keys file")
+        }
 
-		return RevenueCatWrapperImpl(withKeys: key)
-	}
+        return RevenueCatWrapperImpl(withKeys: key)
+    }
 }
 
 // MARK: Revenue Cat Purchases
-extension Kovalee {
-	/// Set a specific userId for RevenueCat
-	///
-	/// - Parameters:
-	///    - userId: a string representing the userId to be set
-	public static func setRevenueCatUserId(userId: String) {
-		Self.shared.kovaleeManager?.setRevenueCatUserId(userId: userId)
-	}
 
-	/// Retrieve the ``CustomerInfo`` for the current customer
-	///
-	/// - Returns: current customer information
-	public static func customerInfo() async throws -> CustomerInfo? {
-		try await Self.shared.kovaleeManager?.customerInfo() as? CustomerInfo
-	}
+public extension Kovalee {
+    /// Set a specific userId for RevenueCat
+    ///
+    /// - Parameters:
+    ///    - userId: a string representing the userId to be set
+    static func setRevenueCatUserId(userId: String) {
+        Self.shared.kovaleeManager?.setRevenueCatUserId(userId: userId)
+    }
 
-	/// Fetch ``Offerings`` if available
-	///
-	/// - Returns: available offerings
-	public static func fetchOfferings() async throws -> Offerings? {
-		try await Self.shared.kovaleeManager?.fetchOfferings() as? Offerings
-	}
+    /// Retrieve the ``CustomerInfo`` for the current customer
+    ///
+    /// - Returns: current customer information
+    static func customerInfo() async throws -> CustomerInfo? {
+        try await Self.shared.kovaleeManager?.customerInfo() as? CustomerInfo
+    }
 
-	/// Fetch current ``Offering`` if available
-	///
-	/// - Returns: available current offering
-	public static func fetchCurrentOffering() async throws -> Offering? {
-		try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering
-	}
+    /// Sync the purchases for the current customer
+    ///
+    /// - Returns: current customer information
+    internal func syncPurchase() async throws -> CustomerInfo? {
+        try await Self.shared.kovaleeManager?.syncPurchase() as? CustomerInfo
+    }
 
-	/// Restore purchase previously made by current user
-	///
-	/// - Parameters:
-	///    - fromSource: from where is the user making the purchase
-	/// - Returns: current ``CustomerInfo``
-	public static func restorePurchases(fromSource source: String) async throws -> CustomerInfo? {
-		try await Self.shared.kovaleeManager?.restorePurchases(fromSource: source) as? CustomerInfo
-	}
+    /// Fetch ``Offerings`` if available
+    ///
+    /// - Returns: available offerings
+    static func fetchOfferings() async throws -> Offerings? {
+        try await Self.shared.kovaleeManager?.fetchOfferings() as? Offerings
+    }
 
-	/// Performs a purchase fo the specified ``Package``
-	///
-	/// - Parameters:
-	///    - package: the package to be purchased
-	///    - fromSource: from where is the user making the purchase
-	/// - Returns: the result of the purchase transation as ``PurchaseResultData``
-	public static func purchase(package: Package, fromSource source: String) async throws -> PurchaseResultData? {
-		try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
-	}
+    /// Fetch current ``Offering`` if available
+    ///
+    /// - Returns: available current offering
+    static func fetchCurrentOffering() async throws -> Offering? {
+        try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering
+    }
 
-	/// Performs a purchase of a subscriptoin with specified Id and duration
-	///
-	/// - Parameters:
-	///    - subscriptionId: the id of the product to be purchased
-	///    - fromSource: from where is the user making the purchase
-	/// - Returns: the result of the purchase transation as ``PurchaseResultData``
-	public static func purchaseSubscription(
-		withId subscriptionId: String,
-		fromSource source: String
-	) async throws -> PurchaseResultData? {
-		guard
-			let offerings = try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering,
-			let package = offerings.availablePackages.first(where: { $0.storeProduct.productIdentifier == subscriptionId })
-		else {
-			return nil
-		}
+    /// Restore purchase previously made by current user
+    ///
+    /// - Parameters:
+    ///    - fromSource: from where is the user making the purchase
+    /// - Returns: current ``CustomerInfo``
+    static func restorePurchases(fromSource source: String) async throws -> CustomerInfo? {
+        try await Self.shared.kovaleeManager?.restorePurchases(fromSource: source) as? CustomerInfo
+    }
 
-		return try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
-	}
+    /// Performs a purchase fo the specified ``Package``
+    ///
+    /// - Parameters:
+    ///    - package: the package to be purchased
+    ///    - fromSource: from where is the user making the purchase
+    /// - Returns: the result of the purchase transation as ``PurchaseResultData``
+    static func purchase(package: Package, fromSource source: String) async throws -> PurchaseResultData? {
+        try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
+    }
 
-	public static func revenueCatUserId() -> String {
-		Self.shared.kovaleeManager?.revenueCatUserId() ?? ""
-	}
+    /// Performs a purchase of a subscriptoin with specified Id and duration
+    ///
+    /// - Parameters:
+    ///    - subscriptionId: the id of the product to be purchased
+    ///    - fromSource: from where is the user making the purchase
+    /// - Returns: the result of the purchase transation as ``PurchaseResultData``
+    static func purchaseSubscription(
+        withId subscriptionId: String,
+        fromSource source: String
+    ) async throws -> PurchaseResultData? {
+        guard
+            let offerings = try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering,
+            let package = offerings.availablePackages.first(where: { $0.storeProduct.productIdentifier == subscriptionId })
+        else {
+            return nil
+        }
 
-	public static func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: IntroEligibilityStatus] {
-		await Self.shared.kovaleeManager?
-			.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)?
-			.compactMapValues { IntroEligibilityStatus(rawValue: $0) } ?? [:]
-	}
+        return try await Self.shared.kovaleeManager?.purchase(package: package, fromSource: source) as? PurchaseResultData
+    }
 
-	public static func setPurchasesDelegate(_ delegate: KovaleePurchasesDelegate) {
-		Self.shared.kovaleeManager?.setPurchaseDelegate(delegate)
-	}
+    static func revenueCatUserId() -> String {
+        Self.shared.kovaleeManager?.revenueCatUserId() ?? ""
+    }
+
+    static func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: IntroEligibilityStatus] {
+        await Self.shared.kovaleeManager?
+            .checkTrialOrIntroDiscountEligibility(productIdentifiers: productIdentifiers)?
+            .compactMapValues { IntroEligibilityStatus(rawValue: $0) } ?? [:]
+    }
+
+    static func setPurchasesDelegate(_ delegate: KovaleePurchasesDelegate) {
+        Self.shared.kovaleeManager?.setPurchaseDelegate(delegate)
+    }
 }
