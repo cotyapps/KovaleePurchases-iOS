@@ -33,7 +33,7 @@ platform :ios do
   end
 
   def release(type)
-    git_pull
+    # git_pull
     podspec_name = "KovaleePurchases.podspec"
 
     pod_lib_lint
