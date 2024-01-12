@@ -36,7 +36,7 @@ public extension Kovalee {
     /// Sync the purchases for the current customer
     ///
     /// - Returns: current customer information
-    internal func syncPurchase() async throws -> CustomerInfo? {
+    static func syncPurchase() async throws -> CustomerInfo? {
         try await Self.shared.kovaleeManager?.syncPurchase() as? CustomerInfo
     }
 
