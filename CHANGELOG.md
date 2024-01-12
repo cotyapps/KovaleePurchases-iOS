@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2024-01-12
+### :bug: Bug Fixes
+- [`275dfa4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/275dfa494ebc7a4c70466e5634274ed9deaba0be) - syncPurchase() is now static *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`753818f`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/753818f72b807c0f39f670e62320c6beb1ce94ac) - bumped podspec version *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.3.0] - 2024-01-09
 ### :sparkles: New Features
 - [`c333514`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/c3335145fcad3509eb4d65db243bde533097dc06) - implemented new syncPurchase function and active property for EntitlementInfos *(commit by [@fto-k](https://github.com/fto-k))*
@@ -56,3 +64,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.4...1.1.5
 [1.2.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.5...1.2.0
 [1.3.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.2.1...1.3.0
+[1.3.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.1...1.3.2
