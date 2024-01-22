@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2024-01-22
+### :bug: Bug Fixes
+- [`1b9cd51`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/1b9cd518e1f4a2c07f68c1a3ab2784136468ad91) - small refactor from syncPurchase to syncPurchases *(commit by [@fto-k](https://github.com/fto-k))*
+- [`848c4bd`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/848c4bd8fb0abf56fc620b35a8d1191afd3b2493) - possible fix for purchaseSubscription withId *(commit by [@fto-k](https://github.com/fto-k))*
+- [`5ab7c4f`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/5ab7c4fcd3cfff6592f2d5250bbde356394481f9) - filtering all offerings *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.3.2] - 2024-01-12
 ### :bug: Bug Fixes
 - [`275dfa4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/275dfa494ebc7a4c70466e5634274ed9deaba0be) - syncPurchase() is now static *(commit by [@fto-k](https://github.com/fto-k))*
@@ -65,3 +72,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.2.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.1.5...1.2.0
 [1.3.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.2.1...1.3.0
 [1.3.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.1...1.3.2
+[1.3.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.3...1.3.4
