@@ -268,6 +268,14 @@ public struct Offerings: AbstractOfferings, Encodable {
         }
         current = offerings.current != nil ? Offering(offering: offerings.current!) : nil
     }
+
+    func returnOffering(withSubscriptionId subscriptionId: String) -> Package? {
+        all.values.compactMap { offering in
+            offering.availablePackages.first(where: { package in
+                package.storeProduct.productIdentifier == subscriptionId
+            })
+        }.first
+    }
 }
 
 /// An offering is a collection of ``Package``s, and they let you control which products

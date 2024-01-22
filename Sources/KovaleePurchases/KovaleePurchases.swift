@@ -84,8 +84,8 @@ public extension Kovalee {
         fromSource source: String
     ) async throws -> PurchaseResultData? {
         guard
-            let offerings = try await Self.shared.kovaleeManager?.fetchOfferings() as? Offering,
-            let package = offerings.availablePackages.first(where: { $0.storeProduct.productIdentifier == subscriptionId })
+            let offerings = try await Self.shared.kovaleeManager?.fetchOfferings() as? Offerings,
+            let package = offerings.returnOffering(withSubscriptionId: subscriptionId)
         else {
             return nil
         }
