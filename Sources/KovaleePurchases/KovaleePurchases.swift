@@ -36,7 +36,7 @@ public extension Kovalee {
     /// Sync the purchases for the current customer
     ///
     /// - Returns: current customer information
-    static func syncPurchase() async throws -> CustomerInfo? {
+    static func syncPurchases() async throws -> CustomerInfo? {
         try await Self.shared.kovaleeManager?.syncPurchase() as? CustomerInfo
     }
 
@@ -84,8 +84,8 @@ public extension Kovalee {
         fromSource source: String
     ) async throws -> PurchaseResultData? {
         guard
-            let offerings = try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering,
-            let package = offerings.availablePackages.first(where: { $0.storeProduct.productIdentifier == subscriptionId })
+            let offerings = try await Self.shared.kovaleeManager?.fetchOfferings() as? Offerings,
+            let package = offerings.returnOffering(withSubscriptionId: subscriptionId)
         else {
             return nil
         }
