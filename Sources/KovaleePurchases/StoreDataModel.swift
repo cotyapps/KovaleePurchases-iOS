@@ -538,6 +538,8 @@ public struct StoreProduct: Encodable {
     /// - Note: the current user may or may not be eligible for some of these.
     public var discounts: [StoreProductDiscount]
 
+    var product: RevenueCat.StoreProduct?
+
     init(_ product: RevenueCat.StoreProduct) {
         productType = ProductType(rawValue: product.productType.rawValue)!
         productCategory = ProductCategory(rawValue: product.productCategory.rawValue)!
@@ -554,6 +556,7 @@ public struct StoreProduct: Encodable {
             SubscriptionPeriod(product.subscriptionPeriod!) : nil
         introductoryDiscount = StoreProductDiscount(product.introductoryDiscount)
         discounts = product.discounts.compactMap { StoreProductDiscount($0) }
+        self.product = product
     }
 
     enum CodingKeys: String, CodingKey {
@@ -608,6 +611,7 @@ public struct StoreProduct: Encodable {
         subscriptionPeriod = nil
         introductoryDiscount = nil
         discounts = []
+        product = nil
     }
 
     static func empty() -> Self {
@@ -619,13 +623,17 @@ public extension StoreProduct {
     /// Calculates the price of this subscription product per month.
     /// - Returns: `nil` if the product is not a subscription.
     var pricePerMonth: NSDecimalNumber? {
-        return subscriptionPeriod?.pricePerMonth(withTotalPrice: price) as NSDecimalNumber?
+        subscriptionPeriod?.pricePerMonth(withTotalPrice: price) as NSDecimalNumber?
     }
 
     /// Calculates the price of this subscription product per year.
     /// - Returns: `nil` if the product is not a subscription.
     var pricePerYear: NSDecimalNumber? {
-        return subscriptionPeriod?.pricePerYear(withTotalPrice: price) as NSDecimalNumber?
+        subscriptionPeriod?.pricePerYear(withTotalPrice: price) as NSDecimalNumber?
+    }
+
+    var sk1Product: SK1Product? {
+        product?.sk1Product
     }
 }
 
