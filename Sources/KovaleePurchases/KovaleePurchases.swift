@@ -48,10 +48,18 @@ public extension Kovalee {
     }
 
     /// Fetch current ``Offering`` if available
+    /// In case the debug mode is on, the method returns the RC product variant equal to the manually set AB test variant.
     ///
     /// - Returns: available current offering
     static func fetchCurrentOffering() async throws -> Offering? {
-        try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering
+        guard let manager = Self.shared.kovaleeManager else {
+            return nil
+        }
+        if manager.debugModeOn() {
+            return try await Self.forceCurrentOffer()
+        } else {
+            return try await Self.shared.kovaleeManager?.fetchCurrentOffering() as? Offering
+        }
     }
 
     /// Restore purchase previously made by current user
@@ -105,5 +113,20 @@ public extension Kovalee {
 
     static func setPurchasesDelegate(_ delegate: KovaleePurchasesDelegate) {
         Self.shared.kovaleeManager?.setPurchaseDelegate(delegate)
+    }
+}
+
+extension Kovalee {
+    private static func forceCurrentOffer() async throws -> Offering? {
+        guard
+            let variant = await Self.shared.kovaleeManager?.abTestValue(forKey: "ab_test_version"),
+            let offers = try await Self.shared.kovaleeManager?.fetchOfferings() as? Offerings
+        else {
+            return nil
+        }
+
+        return offers.all.values.first(where: {
+            $0.getMetadataValue(for: "variant", default: variant) == variant
+        })
     }
 }
