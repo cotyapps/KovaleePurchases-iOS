@@ -2,7 +2,7 @@ import KovaleeSDK
 import SuperwallKit
 import UIKit
 
-class KPaywallViewController: UIViewController {
+public class KPaywallViewController: UIViewController {
     private var paywallDelegate: PaywallDelegate {
         PaywallDelegate {
             self.onComplete()
@@ -16,7 +16,7 @@ class KPaywallViewController: UIViewController {
     private let source: String
     private var onComplete: () -> Void
 
-    init(
+    public init(
         event: String,
         params: [String: Any]?,
         source: String,
@@ -34,13 +34,13 @@ class KPaywallViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         Kovalee.sendEvent(event: .pageView(screen: source))
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         showLoadingView()
 
