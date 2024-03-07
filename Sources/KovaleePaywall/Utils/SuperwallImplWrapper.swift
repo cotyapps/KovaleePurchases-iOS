@@ -53,13 +53,12 @@ class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
 
         purchaseController = PurchaseManager()
         options = SuperwallOptions()
-        self.apiKey = apiKey
         super.init()
 
         options.logging.level = KLogger.logLevel.superwallKitLogLevel()
 
         Superwall.configure(
-            apiKey: self.apiKey,
+            apiKey: apiKey,
             purchaseController: purchaseController,
             options: options
         )
@@ -67,16 +66,6 @@ class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
         purchaseController.syncSubscriptionStatus()
     }
 
-    func setDataCollectionEnabled(_ enabled: Bool) {
-        options.isExternalDataCollectionEnabled = enabled
-        Superwall.configure(
-            apiKey: apiKey,
-            purchaseController: purchaseController,
-            options: options
-        )
-    }
-
-    private let apiKey: String
     private let purchaseController: PurchaseManager
     private let options: SuperwallOptions
 }
