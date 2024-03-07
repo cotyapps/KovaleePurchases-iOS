@@ -3,18 +3,17 @@ import SuperwallKit
 import UIKit
 
 public class KPaywallViewController: UIViewController {
-    private var paywallDelegate: PaywallDelegate {
-        PaywallDelegate {
-            self.onComplete(self)
-        }
-    }
-
     private var spinner: UIActivityIndicatorView?
 
     private let event: String
     private let params: [String: Any]?
     private let source: String
+
     private var onComplete: (UIViewController) -> Void
+    private lazy var paywallDelegate = PaywallDelegate { [weak self] in
+        guard let self else { return }
+        self.onComplete(self)
+    }
 
     public init(
         event: String,
@@ -26,6 +25,7 @@ public class KPaywallViewController: UIViewController {
         self.params = params
         self.source = source
         self.onComplete = onComplete
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -88,5 +88,26 @@ public class KPaywallViewController: UIViewController {
 
         // Re-enable user interaction
         view.isUserInteractionEnabled = true
+    }
+}
+
+public extension UIViewController {
+    func presentFullScreenPaywallViewController(
+        trigger: String,
+        source: String,
+        params: [String: Any]? = nil,
+        onComplete: (() -> Void)? = nil
+    ) {
+        let paywallViewController = KPaywallViewController(
+            event: trigger,
+            params: params,
+            source: source
+        ) { vc in
+            vc.dismiss(animated: true)
+            onComplete?()
+        }
+
+        paywallViewController.modalPresentationStyle = .fullScreen
+        present(paywallViewController, animated: true, completion: nil)
     }
 }
