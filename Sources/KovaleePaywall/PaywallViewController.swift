@@ -5,7 +5,7 @@ import UIKit
 public class KPaywallViewController: UIViewController {
     private var paywallDelegate: PaywallDelegate {
         PaywallDelegate {
-            self.onComplete()
+            self.onComplete(self)
         }
     }
 
@@ -14,13 +14,13 @@ public class KPaywallViewController: UIViewController {
     private let event: String
     private let params: [String: Any]?
     private let source: String
-    private var onComplete: () -> Void
+    private var onComplete: (UIViewController) -> Void
 
     public init(
         event: String,
         params: [String: Any]?,
         source: String,
-        onComplete: @escaping () -> Void
+        onComplete: @escaping (UIViewController) -> Void
     ) {
         self.event = event
         self.params = params
