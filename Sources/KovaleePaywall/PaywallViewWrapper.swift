@@ -59,7 +59,7 @@ struct SuperwallPaywallView: View {
             Task {
                 self.paywallViewController = await retrievePaywall()
             }
-            Kovalee.sendEvent(event: .paywallView(source))
+            Kovalee.sendEvent(event: .pageView(screen: source))
         }
     }
 }
@@ -67,7 +67,7 @@ struct SuperwallPaywallView: View {
 extension SuperwallPaywallView {
     private func retrievePaywall() async -> PaywallViewController? {
         do {
-            let paywallController = try await loadPaywall()
+            let paywallController = try await getPaywall()
             await Kovalee.handlePaywallABTest(withVariant: paywallController.info.name)
 
             return paywallController
@@ -78,11 +78,11 @@ extension SuperwallPaywallView {
         }
     }
 
-    private func loadPaywall() async throws -> PaywallViewController {
+    private func getPaywall() async throws -> PaywallViewController {
         do {
-            let paywallEvent = await Kovalee.getEventFromABTest() ?? event
+            let triggerEvent = await Kovalee.paywallTriggerEventFromABTest() ?? event
             return try await Superwall.shared.getPaywall(
-                forEvent: paywallEvent,
+                forEvent: triggerEvent,
                 params: params,
                 delegate: paywallDelegate
             )

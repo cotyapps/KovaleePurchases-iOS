@@ -20,7 +20,7 @@ extension PaywallManagerCreator: Creator {
 
 extension Kovalee {
     /// Usefull in case of forcing AB tests variants for testing purposes
-    static func getEventFromABTest() async -> String? {
+    static func paywallTriggerEventFromABTest() async -> String? {
         guard await experimentRunning() else {
             return nil
         }
@@ -49,15 +49,17 @@ extension Kovalee {
 
 class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
     init(withApiKey apiKey: String) {
+        KLogger.debug("💸 Initializing Superwall")
+
         purchaseController = PurchaseManager()
         options = SuperwallOptions()
+        self.apiKey = apiKey
         super.init()
 
         options.logging.level = KLogger.logLevel.superwallKitLogLevel()
-        KLogger.debug("💸 Initializing Superwall")
 
         Superwall.configure(
-            apiKey: apiKey,
+            apiKey: self.apiKey,
             purchaseController: purchaseController,
             options: options
         )
@@ -68,12 +70,13 @@ class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
     func setDataCollectionEnabled(_ enabled: Bool) {
         options.isExternalDataCollectionEnabled = enabled
         Superwall.configure(
-            apiKey: "",
+            apiKey: apiKey,
             purchaseController: purchaseController,
             options: options
         )
     }
 
+    private let apiKey: String
     private let purchaseController: PurchaseManager
     private let options: SuperwallOptions
 }
