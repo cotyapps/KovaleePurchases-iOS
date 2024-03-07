@@ -57,46 +57,14 @@ struct SuperwallPaywallView: View {
         }
         .onAppear {
             Task {
-                self.paywallViewController = await retrievePaywall()
+                self.paywallViewController = await SuperwallPaywallHandler.retrievePaywall(
+                    event: event,
+                    source: source,
+                    params: params,
+                    paywallDelegate: paywallDelegate
+                )
             }
             Kovalee.sendEvent(event: .pageView(screen: source))
-        }
-    }
-}
-
-extension SuperwallPaywallView {
-    private func retrievePaywall() async -> PaywallViewController? {
-        do {
-            let paywallController = try await getPaywall()
-            await Kovalee.handlePaywallABTest(withVariant: paywallController.info.name)
-
-            return paywallController
-        } catch {
-            KLogger.error("❌ 💸 Paywall not loaded with error: \(error)")
-            paywallDelegate.onComplete()
-            return nil
-        }
-    }
-
-    private func getPaywall() async throws -> PaywallViewController {
-        do {
-            let triggerEvent = await Kovalee.paywallTriggerEventFromABTest() ?? event
-            return try await Superwall.shared.getPaywall(
-                forEvent: triggerEvent,
-                params: params,
-                delegate: paywallDelegate
-            )
-
-            /// In case the event retrieved by the AB test has no paywalls associated
-            /// retrieve the paywall associated to the default event
-        } catch PaywallSkippedReason.eventNotFound {
-            return try await Superwall.shared.getPaywall(
-                forEvent: event,
-                params: params,
-                delegate: paywallDelegate
-            )
-        } catch {
-            throw error
         }
     }
 }
