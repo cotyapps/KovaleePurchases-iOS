@@ -2,12 +2,7 @@ import KovaleeSDK
 import SuperwallKit
 import UIKit
 
-class PaywallViewController: UIViewController {
-    enum State {
-        case loading
-        case ready
-    }
-
+class KPaywallViewController: UIViewController {
     private var paywallDelegate: PaywallDelegate {
         PaywallDelegate {
             self.onComplete()
@@ -16,14 +11,12 @@ class PaywallViewController: UIViewController {
 
     private var spinner: UIActivityIndicatorView?
 
-    private var state: State = .loading
     private let event: String
     private let params: [String: Any]?
     private let source: String
     private var onComplete: () -> Void
 
     init(
-        paywallDelegate _: PaywallDelegate,
         event: String,
         params: [String: Any]?,
         source: String,
