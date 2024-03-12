@@ -20,12 +20,30 @@
         }
       },
       {
+        "package": "Adjust",
+        "repositoryURL": "https://github.com/adjust/ios_sdk",
+        "state": {
+          "branch": null,
+          "revision": "cd05aecfcb9af2f5c5f23cac162974e94eab10d4",
+          "version": "4.37.2"
+        }
+      },
+      {
         "package": "KovaleeSDK",
         "repositoryURL": "https://github.com/cotyapps/Kovalee-iOS-SDK",
         "state": {
+          "branch": "web2app",
+          "revision": "3e7bc06d7a7889c85e056c816cf0d7a2ea3c048d",
+          "version": null
+        }
+      },
+      {
+        "package": "KovaleeAttribution",
+        "repositoryURL": "https://github.com/cotyapps/KovaleeAttribution-iOS.git",
+        "state": {
           "branch": null,
-          "revision": "249d9496a6856b82a6a6e46d06e4211eaf545ec9",
-          "version": "1.5.8"
+          "revision": "31ad029f99c612488eb6c4b6c863308e0c2f447c",
+          "version": "1.2.0"
         }
       },
       {

@@ -1,4 +1,5 @@
 import Foundation
+import KovaleeAttribution
 import KovaleeFramework
 import KovaleeSDK
 
@@ -31,6 +32,42 @@ public extension Kovalee {
     /// - Returns: current customer information
     static func customerInfo() async throws -> CustomerInfo? {
         try await Self.shared.kovaleeManager?.customerInfo() as? CustomerInfo
+    }
+
+    /// Check if current user is premium.
+    ///
+    /// - Returns: true if current customer has at least one iAP subscription
+    static func isUserPremium() async throws -> Bool {
+        guard let customerInfo = try await Self.shared.kovaleeManager?.customerInfo() as? CustomerInfo else {
+            return false
+        }
+
+        return !customerInfo.activeSubscriptions.isEmpty
+    }
+
+    /// Check if current the user, identified by the email, is premium.
+    /// A first check is done if the user has at least one in app purchase subscription.
+    /// A second check is performed to check if the user has at least one web subscription.
+    ///
+    /// - Parameters:
+    ///    - email: the email of the user
+    ///    - liveEnvironment: should perform the check to live or dev Stripe environment
+    /// - Returns: true if current customer has at least one subscription: web or iAP
+    static func isCustomerSubscribed(withEmail email: String, liveEnvironment: Bool = true) async throws -> Bool {
+        if try await Self.isUserPremium() { // In App Purchase subscriber
+            return true
+        } else {
+            guard let customer = try await Self.shared.kovaleeManager?.retrieveSubscribedCustomer(
+                withEmail: email, isLiveEnvironment: liveEnvironment
+            ) else {
+                return false
+            }
+
+            Self.setAmplitudeUserId(userId: customer.id)
+            Self.setRevenueCatUserId(userId: customer.id)
+
+            return true
+        }
     }
 
     /// Sync the purchases for the current customer
