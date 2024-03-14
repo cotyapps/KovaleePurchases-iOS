@@ -66,7 +66,7 @@ public extension Kovalee {
             Self.setAmplitudeUserId(userId: customer.id)
             Self.setRevenueCatUserId(userId: customer.id)
 
-            return true
+            return try await Self.isUserPremium()
         }
     }
 
