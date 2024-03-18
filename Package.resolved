@@ -2,12 +2,21 @@
   "object": {
     "pins": [
       {
+        "package": "abseil",
+        "repositoryURL": "https://github.com/google/abseil-cpp-binary.git",
+        "state": {
+          "branch": null,
+          "revision": "df308b8b46607675f2b9ec8e569109008f9155ce",
+          "version": "1.2022062300.1"
+        }
+      },
+      {
         "package": "Amplitude-Swift",
         "repositoryURL": "https://github.com/amplitude/Amplitude-Swift",
         "state": {
           "branch": null,
-          "revision": "353b334924d05c67a85d403584a065999a778c2b",
-          "version": "1.1.0"
+          "revision": "35f253db41cf68d220390946c7ad7f344665d763",
+          "version": "1.3.6"
         }
       },
       {
@@ -20,12 +29,120 @@
         }
       },
       {
+        "package": "AppCheck",
+        "repositoryURL": "https://github.com/google/app-check.git",
+        "state": {
+          "branch": null,
+          "revision": "3e464dad87dad2d29bb29a97836789bf0f8f67d2",
+          "version": "10.18.1"
+        }
+      },
+      {
+        "package": "Firebase",
+        "repositoryURL": "https://github.com/firebase/firebase-ios-sdk.git",
+        "state": {
+          "branch": null,
+          "revision": "fe09d61a539e11fdbe24f269bba10144b6145fe2",
+          "version": "10.22.0"
+        }
+      },
+      {
+        "package": "GoogleAppMeasurement",
+        "repositoryURL": "https://github.com/google/GoogleAppMeasurement.git",
+        "state": {
+          "branch": null,
+          "revision": "bf3bb24f6b60a7acedaef504e9ce97154203217a",
+          "version": "10.22.0"
+        }
+      },
+      {
+        "package": "GoogleDataTransport",
+        "repositoryURL": "https://github.com/google/GoogleDataTransport.git",
+        "state": {
+          "branch": null,
+          "revision": "a637d318ae7ae246b02d7305121275bc75ed5565",
+          "version": "9.4.0"
+        }
+      },
+      {
+        "package": "GoogleUtilities",
+        "repositoryURL": "https://github.com/google/GoogleUtilities.git",
+        "state": {
+          "branch": null,
+          "revision": "26c898aed8bed13b8a63057ee26500abbbcb8d55",
+          "version": "7.13.1"
+        }
+      },
+      {
+        "package": "gRPC",
+        "repositoryURL": "https://github.com/google/grpc-binary.git",
+        "state": {
+          "branch": null,
+          "revision": "ea4cb5cc0c39c732b85386263116d2e2fdbbdc61",
+          "version": "1.49.2"
+        }
+      },
+      {
+        "package": "GTMSessionFetcher",
+        "repositoryURL": "https://github.com/google/gtm-session-fetcher.git",
+        "state": {
+          "branch": null,
+          "revision": "76135c9f4e1ac85459d5fec61b6f76ac47ab3a4c",
+          "version": "3.3.1"
+        }
+      },
+      {
+        "package": "InteropForGoogle",
+        "repositoryURL": "https://github.com/google/interop-ios-for-google-sdks.git",
+        "state": {
+          "branch": null,
+          "revision": "2d12673670417654f08f5f90fdd62926dc3a2648",
+          "version": "100.0.0"
+        }
+      },
+      {
         "package": "KovaleeSDK",
         "repositoryURL": "https://github.com/cotyapps/Kovalee-iOS-SDK",
         "state": {
+          "branch": "paywall-kit",
+          "revision": "cd88f5303c33693d26e323e531f09ceccc7344af",
+          "version": null
+        }
+      },
+      {
+        "package": "KovaleeRemoteConfig",
+        "repositoryURL": "https://github.com/cotyapps/KovaleeRemoteConfig-iOS",
+        "state": {
           "branch": null,
-          "revision": "249d9496a6856b82a6a6e46d06e4211eaf545ec9",
-          "version": "1.5.8"
+          "revision": "b52db28f937b64a55d1c138f8ee89e44d8d4c034",
+          "version": "1.4.1"
+        }
+      },
+      {
+        "package": "leveldb",
+        "repositoryURL": "https://github.com/firebase/leveldb.git",
+        "state": {
+          "branch": null,
+          "revision": "43aaef65e0c665daadf848761d560e446d350d3d",
+          "version": "1.22.4"
+        }
+      },
+      {
+        "package": "nanopb",
+        "repositoryURL": "https://github.com/firebase/nanopb.git",
+        "state": {
+          "branch": null,
+          "revision": "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
+          "version": "2.30910.0"
+        }
+      },
+      {
+        "package": "Promises",
+        "repositoryURL": "https://github.com/google/promises.git",
+        "state": {
+          "branch": null,
+          "revision": "540318ecedd63d883069ae7f1ed811a2df00b6ac",
+          "version": "2.4.0"
         }
       },
       {
@@ -33,8 +150,26 @@
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios",
         "state": {
           "branch": null,
-          "revision": "815f6dc5d89bb40325ab3e01998e60c5f4b07ffe",
-          "version": "4.31.7"
+          "revision": "022748f79384035c0752602300e4e112018cd9c9",
+          "version": "4.38.1"
+        }
+      },
+      {
+        "package": "SuperwallKit",
+        "repositoryURL": "https://github.com/superwall-me/Superwall-iOS",
+        "state": {
+          "branch": null,
+          "revision": "63fb263319f9482e2a6e33a6b33faa50a20932e7",
+          "version": "3.5.0"
+        }
+      },
+      {
+        "package": "SwiftProtobuf",
+        "repositoryURL": "https://github.com/apple/swift-protobuf.git",
+        "state": {
+          "branch": null,
+          "revision": "65e8f29b2d63c4e38e736b25c27b83e012159be8",
+          "version": "1.25.2"
         }
       }
     ]
