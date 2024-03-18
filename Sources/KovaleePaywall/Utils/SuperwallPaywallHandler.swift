@@ -34,9 +34,11 @@ struct SuperwallPaywallHandler {
     ) async throws -> PaywallViewController {
         do {
             let triggerEvent = await Kovalee.paywallTriggerEventFromABTest() ?? event
+            var userParams = params ?? [String: Any]()
+            userParams["event_name"] = triggerEvent
             return try await Superwall.shared.getPaywall(
                 forEvent: triggerEvent,
-                params: params,
+                params: userParams,
                 delegate: paywallDelegate
             )
 
