@@ -51,18 +51,12 @@ public struct PaywallView: View {
         self.onComplete = onComplete
     }
 
-    private var paywallDelegate: PaywallDelegate {
-        PaywallDelegate {
-            onComplete()
-        }
-    }
-
     public var body: some View {
         SuperwallPaywallView(
-            paywallDelegate: paywallDelegate,
             event: trigger,
             params: params,
-            source: source
+            source: source,
+            onComplete: onComplete
         )
         .onAppear {
             paywallSource = source

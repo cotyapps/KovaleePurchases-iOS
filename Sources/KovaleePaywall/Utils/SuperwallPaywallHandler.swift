@@ -2,35 +2,38 @@ import KovaleeFramework
 import KovaleeSDK
 import SuperwallKit
 
-struct SuperwallPaywallHandler {
-    static func retrievePaywall(
+class SuperwallPaywallHandler {
+    var onComplete: () -> Void
+
+    init(onComplete: @escaping () -> Void) {
+        self.onComplete = onComplete
+    }
+
+    func retrievePaywall(
         event: String,
         source: String,
-        params: [String: Any]?,
-        paywallDelegate: PaywallDelegate
+        params: [String: Any]?
     ) async -> PaywallViewController? {
         do {
-            let paywallController = try await Self.getPaywall(
+            let paywallController = try await getPaywall(
                 event: event,
                 source: source,
-                params: params,
-                paywallDelegate: paywallDelegate
+                params: params
             )
             await Kovalee.handlePaywallABTest(withVariant: paywallController.info.name)
 
             return paywallController
         } catch {
             KLogger.error("❌ 💸 Paywall not loaded with error: \(error)")
-            paywallDelegate.onComplete()
+            onComplete()
             return nil
         }
     }
 
-    private static func getPaywall(
+    private func getPaywall(
         event: String,
         source _: String,
-        params: [String: Any]?,
-        paywallDelegate: PaywallDelegate
+        params: [String: Any]?
     ) async throws -> PaywallViewController {
         do {
             let triggerEvent = await Kovalee.paywallTriggerEventFromABTest() ?? event
@@ -39,7 +42,7 @@ struct SuperwallPaywallHandler {
             return try await Superwall.shared.getPaywall(
                 forEvent: triggerEvent,
                 params: userParams,
-                delegate: paywallDelegate
+                delegate: self
             )
 
             /// In case the event retrieved by the AB test has no paywalls associated
@@ -48,10 +51,24 @@ struct SuperwallPaywallHandler {
             return try await Superwall.shared.getPaywall(
                 forEvent: event,
                 params: params,
-                delegate: paywallDelegate
+                delegate: self
             )
         } catch {
             throw error
         }
+    }
+}
+
+extension SuperwallPaywallHandler: PaywallViewControllerDelegate {
+    func paywall(
+        _: SuperwallKit.PaywallViewController,
+        didFinishWith _: SuperwallKit.PaywallResult,
+        shouldDismiss dismiss: Bool
+    ) {
+        guard dismiss else {
+            return
+        }
+
+        onComplete()
     }
 }

@@ -26,7 +26,7 @@ public class KPaywallViewController: UIViewController {
     private let source: String
 
     private var onComplete: (UIViewController) -> Void
-    private lazy var paywallDelegate = PaywallDelegate { [weak self] in
+    private lazy var paywallHandler = SuperwallPaywallHandler { [weak self] in
         guard let self else { return }
         self.onComplete(self)
     }
@@ -76,11 +76,10 @@ public class KPaywallViewController: UIViewController {
     }
 
     private func loadPaywallView() async -> PaywallViewController? {
-        await SuperwallPaywallHandler.retrievePaywall(
+        await paywallHandler.retrievePaywall(
             event: event,
             source: source,
-            params: params,
-            paywallDelegate: paywallDelegate
+            params: params
         )
     }
 
