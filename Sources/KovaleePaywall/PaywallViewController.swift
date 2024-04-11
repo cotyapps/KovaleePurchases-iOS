@@ -13,7 +13,8 @@ import UIKit
 ///		event: "button_click",
 ///		source: "onboarding"
 ///		params: ["user_id": "12345"],
-///		) { vc in
+///		alternativePaywall: AlternativePaywallViewController(),
+///		) { vc, error in
 ///			vc.dismiss(animated: true)
 ///		}
 /// present(paywallViewController, animated: true, completion: nil)
@@ -25,10 +26,22 @@ public class KPaywallViewController: UIViewController {
     private let params: [String: Any]?
     private let source: String
 
-    private var onComplete: (UIViewController) -> Void
-    private lazy var paywallHandler = SuperwallPaywallHandler { [weak self] in
-        guard let self else { return }
-        self.onComplete(self)
+    private var alternativePaywall: UIViewController?
+    private var onComplete: (UIViewController, PaywallPresentationError?) -> Void
+    private lazy var paywallHandler = SuperwallPaywallHandler { [weak self] error in
+        Task { @MainActor in
+            guard let self else {
+                return
+            }
+
+            if let error {
+                if self.alternativePaywall == nil {
+                    self.onComplete(self, error)
+                }
+            } else {
+                self.onComplete(self, nil)
+            }
+        }
     }
 
     /// Creates a `KPaywallViewController` instance.
@@ -37,17 +50,20 @@ public class KPaywallViewController: UIViewController {
     ///   - event: The event trigger for showing the paywall. It refers to the event_name in Superwall.
     ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
-    ///   - onComplete: A closure called upon the completion of the paywall interaction. Returns the current ViewController so it can be dismissed.
+    ///   - alternativePaywall: Optional View Controller to be displayed in case the designated paywall can't be presented.
+    ///   - onComplete: A closure called upon the completion of the paywall interaction. Returns the current ViewController so it can be dismissed and an optional presentation error in case of issues displaying the designated paywall.
     public init(
         event: String,
         source: String,
         params: [String: Any]?,
-        onComplete: @escaping (UIViewController) -> Void
+        alternativePaywall: UIViewController? = nil,
+        onComplete: @escaping (UIViewController, PaywallPresentationError?) -> Void
     ) {
         self.event = event
         self.params = params
         self.source = source
         self.onComplete = onComplete
+        self.alternativePaywall = alternativePaywall
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -71,6 +87,9 @@ public class KPaywallViewController: UIViewController {
             if let paywallViewController = await self.loadPaywallView() {
                 hideLoadingView()
                 presentPaywallView(paywallViewController)
+            } else if let alternativePaywall = self.alternativePaywall {
+                hideLoadingView()
+                presentPaywallView(alternativePaywall)
             }
         }
     }
@@ -83,7 +102,7 @@ public class KPaywallViewController: UIViewController {
         )
     }
 
-    private func presentPaywallView(_ viewController: PaywallViewController) {
+    private func presentPaywallView(_ viewController: UIViewController) {
         addChild(viewController)
         view.addSubview(viewController.view)
         viewController.didMove(toParent: self)

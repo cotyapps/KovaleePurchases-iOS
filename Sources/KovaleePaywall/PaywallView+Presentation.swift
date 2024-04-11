@@ -11,7 +11,8 @@ import SwiftUI
 ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
 ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
 ///   - params: Optional parameters to send to Superwall for filtering audiences.
-///   - onComplete: An optional closure called after the paywall has been dismissed.
+///   - alternativePaywall: View To be presented in case the designated paywall can't be presented
+///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
 ///
 /// ## Example
 ///
@@ -30,8 +31,12 @@ import SwiftUI
 ///             trigger: "button_click",
 ///             source: "ContentView",
 ///             params: ["user_id": "12345"],
-///             onComplete: {
+///             onComplete: { error in
+///             	if let error {
+///             		print("There was an error presenting the paywall")
+///             	}
 ///                 print("Paywall dismissed")
+///                 showPaywall = false
 ///             }
 ///         )
 ///     }
@@ -45,19 +50,44 @@ public extension View {
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
     ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
-    ///   - onComplete: An optional closure called after the paywall has been dismissed.
+    ///   - alternativePaywall: View To be presented in case the designated paywall can't be presented
+    ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
     func fullScreenPaywall(
         isPresented: Binding<Bool>,
         trigger: String,
         source: String,
         params: [String: Any]? = nil,
-        onComplete: (() -> Void)? = nil
+        @ViewBuilder alternativePaywall: @escaping () -> some View,
+        onComplete: @escaping ((PaywallPresentationError?) -> Void)
     ) -> some View {
         fullScreenCover(isPresented: isPresented) {
-            PaywallView(trigger: trigger, source: source, params: params) {
-                isPresented.wrappedValue.toggle()
-                onComplete?()
-            }
+            PaywallView(
+                trigger: trigger,
+                source: source,
+                params: params,
+                alternativePaywall: alternativePaywall,
+                onComplete: onComplete
+            )
+        }
+    }
+
+    /// Adds a full screen paywall to the view.
+    ///
+    /// - Parameters:
+    ///   - isPresented: A binding to a Boolean that determines whether to present the paywall.
+    ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
+    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
+    ///   - params: Optional parameters to send to Superwall for filtering audiences.
+    ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
+    func fullScreenPaywall(
+        isPresented: Binding<Bool>,
+        trigger: String,
+        source: String,
+        params: [String: Any]? = nil,
+        onComplete: @escaping ((PaywallPresentationError?) -> Void)
+    ) -> some View {
+        fullScreenCover(isPresented: isPresented) {
+            PaywallView(trigger: trigger, source: source, params: params, onComplete: onComplete)
         }
     }
 }

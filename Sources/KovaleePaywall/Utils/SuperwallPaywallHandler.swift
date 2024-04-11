@@ -3,9 +3,9 @@ import KovaleeSDK
 import SuperwallKit
 
 class SuperwallPaywallHandler {
-    var onComplete: () -> Void
+    private var onComplete: (PaywallPresentationError?) -> Void
 
-    init(onComplete: @escaping () -> Void) {
+    init(onComplete: @escaping (PaywallPresentationError?) -> Void) {
         self.onComplete = onComplete
     }
 
@@ -25,7 +25,11 @@ class SuperwallPaywallHandler {
             return paywallController
         } catch {
             KLogger.error("❌ 💸 Paywall not loaded with error: \(error)")
-            onComplete()
+            if error is PaywallSkippedReason {
+                onComplete(PaywallPresentationError.mapFromSuperwall(reason: error as! PaywallSkippedReason))
+            } else {
+                onComplete(.unknownError)
+            }
             return nil
         }
     }
@@ -69,6 +73,6 @@ extension SuperwallPaywallHandler: PaywallViewControllerDelegate {
             return
         }
 
-        onComplete()
+        onComplete(nil)
     }
 }

@@ -15,38 +15,60 @@ struct PaywallViewControllerWrapper: UIViewControllerRepresentable {
     func updateUIViewController(_: UIViewControllerType, context _: Context) {}
 }
 
-struct SuperwallPaywallView: View {
+struct SuperwallPaywallView<AlternativePaywall: View>: View {
     let event: String
     let params: [String: Any]?
     let source: String
 
-    init(event: String, params: [String: Any]?, source: String, onComplete: @escaping () -> Void) {
+    var alternativePaywall: AlternativePaywall
+
+    enum ViewState {
+        case loading
+        case paywall(PaywallViewController)
+        case alternativePaywall
+    }
+
+    init(
+        event: String,
+        params: [String: Any]?,
+        source: String,
+        alternativePaywall: AlternativePaywall,
+        onComplete: @escaping (PaywallPresentationError?) -> Void
+    ) {
         self.event = event
         self.params = params
         self.source = source
+        self.alternativePaywall = alternativePaywall
         paywallHandler = SuperwallPaywallHandler(onComplete: onComplete)
     }
 
     private var paywallHandler: SuperwallPaywallHandler
-    @State private var paywallViewController: PaywallViewController?
+    @State private var viewState: ViewState = .loading
 
     var body: some View {
         Group {
-            if let viewController = paywallViewController {
-                PaywallViewControllerWrapper(viewController: viewController)
-                    .ignoresSafeArea(edges: .all)
-            } else {
+            switch viewState {
+            case .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity)
+            case let .paywall(paywall):
+                PaywallViewControllerWrapper(viewController: paywall)
+                    .ignoresSafeArea(edges: .all)
+            case .alternativePaywall:
+                alternativePaywall
             }
         }
         .onAppear {
             Task {
-                self.paywallViewController = await paywallHandler.retrievePaywall(
+                if let paywall = await paywallHandler.retrievePaywall(
                     event: event,
                     source: source,
                     params: params
-                )
+                ) {
+                    viewState = .paywall(paywall)
+                } else {
+                    viewState = .alternativePaywall
+                }
             }
             Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
         }

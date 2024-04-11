@@ -1,3 +1,4 @@
+import SuperwallKit
 import SwiftUI
 
 // MARK: Kovalee Paywall
@@ -24,13 +25,14 @@ import SwiftUI
 ///     }
 /// )
 /// ```
-public struct PaywallView: View {
+public struct PaywallView<AlternativePaywall: View>: View {
     @AppStorage(.paywallSource) private var paywallSource = ""
 
     private let trigger: String
     private let source: String
     private let params: [String: Any]?
-    private var onComplete: () -> Void
+    private let alternativePaywall: AlternativePaywall
+    private var onComplete: (PaywallPresentationError?) -> Void
 
     /// Creates a `PaywallView` instance.
     ///
@@ -38,17 +40,40 @@ public struct PaywallView: View {
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
     ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
-    ///   - onComplete: A closure called upon the completion of the paywall interaction.
+    ///   - alternativePaywall: View to be presented in case the designated paywall can't be presented
+    ///   - onComplete: A closure called upon the completion of the paywall interaction. It will return an optional presentation error in case of issues presenting the designated paywall.
     public init(
         trigger: String,
         source: String,
         params: [String: Any]? = nil,
-        onComplete: @escaping () -> Void
+        @ViewBuilder alternativePaywall: () -> AlternativePaywall,
+        onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.trigger = trigger
         self.source = source
         self.params = params
         self.onComplete = onComplete
+        self.alternativePaywall = alternativePaywall()
+    }
+
+    /// Creates a `PaywallView` instance.
+    ///
+    /// - Parameters:
+    ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
+    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
+    ///   - params: Optional parameters to send to Superwall for filtering audiences.
+    ///   - onComplete: A closure called upon the completion of the paywall interaction. It will return an optional presentation error in case of issues presenting the designated paywall.
+    public init(
+        trigger: String,
+        source: String,
+        params: [String: Any]? = nil,
+        onComplete: @escaping (PaywallPresentationError?) -> Void
+    ) where AlternativePaywall == EmptyView {
+        self.trigger = trigger
+        self.source = source
+        self.params = params
+        self.onComplete = onComplete
+        alternativePaywall = EmptyView()
     }
 
     public var body: some View {
@@ -56,10 +81,45 @@ public struct PaywallView: View {
             event: trigger,
             params: params,
             source: source,
+            alternativePaywall: alternativePaywall,
             onComplete: onComplete
         )
         .onAppear {
             paywallSource = source
+        }
+    }
+}
+
+public enum PaywallPresentationError {
+    /// The user was assigned to a holdout.
+    ///
+    /// A holdout is a control group which you can analyse against
+    /// who don't receive any paywall when they match a rule.
+    case holdout
+
+    /// No rule was matched for this event.
+    case noRuleMatch
+
+    /// This event was not found on the dashboard.
+    case eventNotFound
+
+    /// The user is subscribed.
+    case userIsSubscribed
+
+    case unknownError
+}
+
+extension PaywallPresentationError {
+    static func mapFromSuperwall(reason: PaywallSkippedReason) -> Self {
+        switch reason {
+        case .holdout:
+            .holdout
+        case .noRuleMatch:
+            .noRuleMatch
+        case .eventNotFound:
+            .eventNotFound
+        case .userIsSubscribed:
+            .userIsSubscribed
         }
     }
 }
