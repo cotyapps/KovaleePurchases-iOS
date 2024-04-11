@@ -13,6 +13,7 @@ import UIKit
 ///             trigger: "user_trial_ended",
 ///             source: "example_screen",
 ///             params: ["user_id": "12345"],
+///             alternativePaywall: AlternativePaywallViewController(variant: "0002")
 ///             onComplete: {
 ///                 print("Paywall dismissed")
 ///             }
