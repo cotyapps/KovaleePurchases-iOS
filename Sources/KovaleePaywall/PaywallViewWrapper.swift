@@ -15,12 +15,12 @@ struct PaywallViewControllerWrapper: UIViewControllerRepresentable {
     func updateUIViewController(_: UIViewControllerType, context _: Context) {}
 }
 
-struct SuperwallPaywallView<AlternativePaywall: View>: View {
+struct SuperwallPaywallView<Paywall: View>: View {
     let event: String
     let params: [String: Any]?
     let source: String
 
-    var alternativePaywall: AlternativePaywall
+    var alternativePaywall: AlternativePaywall<Paywall>
 
     enum ViewState {
         case loading
@@ -32,7 +32,7 @@ struct SuperwallPaywallView<AlternativePaywall: View>: View {
         event: String,
         params: [String: Any]?,
         source: String,
-        alternativePaywall: AlternativePaywall,
+        alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.event = event
@@ -68,6 +68,8 @@ struct SuperwallPaywallView<AlternativePaywall: View>: View {
                     viewState = .paywall(paywall)
                 } else {
                     viewState = .alternativePaywall
+
+                    await Kovalee.handlePaywallABTest(withVariant: alternativePaywall.variant)
                 }
             }
             Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))

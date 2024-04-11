@@ -31,6 +31,14 @@ import SwiftUI
 ///             trigger: "button_click",
 ///             source: "ContentView",
 ///             params: ["user_id": "12345"],
+///				alternativePaywall: AlternativePaywall(variant: "0002") {
+///					VStack {
+///						Text("This is an Alternative paywall")
+///						Button("Dismiss") {
+///							displayPaywall.toggle()
+///						}
+///					}
+///				},
 ///             onComplete: { error in
 ///             	if let error {
 ///             		print("There was an error presenting the paywall")
@@ -52,12 +60,12 @@ public extension View {
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - alternativePaywall: View To be presented in case the designated paywall can't be presented
     ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
-    func fullScreenPaywall(
+    func fullScreenPaywall<Paywall: View>(
         isPresented: Binding<Bool>,
         trigger: String,
         source: String,
         params: [String: Any]? = nil,
-        @ViewBuilder alternativePaywall: @escaping () -> some View,
+        alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping ((PaywallPresentationError?) -> Void)
     ) -> some View {
         fullScreenCover(isPresented: isPresented) {

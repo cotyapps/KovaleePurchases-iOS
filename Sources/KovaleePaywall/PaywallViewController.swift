@@ -7,13 +7,12 @@ import UIKit
 /// This controller is responsible for initializing with necessary parameters, presenting, and managing a Superwall `PaywallViewController`. It includes delegate handling for paywall completion events and supports modal presentation.
 ///
 /// Use this view controller to present a paywall in response to various triggers, with additional custom parameters and completinion.
-
 /// ```swift
 /// let paywallViewController = KPaywallViewController(
-///		event: "button_click",
-///		source: "onboarding"
-///		params: ["user_id": "12345"],
-///		alternativePaywall: AlternativePaywallViewController(),
+///			event: "button_click",
+///			source: "onboarding"
+///			params: ["user_id": "12345"],
+///			alternativePaywall: AlternativePaywallViewController(variant: "0002")
 ///		) { vc, error in
 ///			vc.dismiss(animated: true)
 ///		}
@@ -26,7 +25,7 @@ public class KPaywallViewController: UIViewController {
     private let params: [String: Any]?
     private let source: String
 
-    private var alternativePaywall: UIViewController?
+    private var alternativePaywall: AlternativePaywallController?
     private var onComplete: (UIViewController, PaywallPresentationError?) -> Void
     private lazy var paywallHandler = SuperwallPaywallHandler { [weak self] error in
         Task { @MainActor in
@@ -56,7 +55,7 @@ public class KPaywallViewController: UIViewController {
         event: String,
         source: String,
         params: [String: Any]?,
-        alternativePaywall: UIViewController? = nil,
+        alternativePaywall: AlternativePaywallController? = nil,
         onComplete: @escaping (UIViewController, PaywallPresentationError?) -> Void
     ) {
         self.event = event
@@ -90,6 +89,8 @@ public class KPaywallViewController: UIViewController {
             } else if let alternativePaywall = self.alternativePaywall {
                 hideLoadingView()
                 presentPaywallView(alternativePaywall)
+
+                await Kovalee.handlePaywallABTest(withVariant: alternativePaywall.variant)
             }
         }
     }
@@ -130,4 +131,14 @@ public class KPaywallViewController: UIViewController {
         // Re-enable user interaction
         view.isUserInteractionEnabled = true
     }
+}
+
+/// A protocol that defines the requirements for a view controller to act as an `AlternativePaywallController`.
+///
+/// Conform to the `AlternativePaywallController` protocol in any `UIViewController` that is intended to manage
+/// a paywall in your application. This protocol ensures that each paywall controller has a `variant` property,
+/// which can be used for identifying and differentiating multiple paywall variations.
+///
+public protocol AlternativePaywallController: UIViewController {
+    var variant: String { get }
 }

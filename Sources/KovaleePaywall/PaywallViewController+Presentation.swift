@@ -36,7 +36,7 @@ public extension UIViewController {
         trigger: String,
         source: String,
         params: [String: Any]? = nil,
-        alternativePaywall: UIViewController? = nil,
+        alternativePaywall: AlternativePaywallController? = nil,
         onComplete: @escaping (UIViewController, PaywallPresentationError?) -> Void
     ) {
         let paywallViewController = KPaywallViewController(

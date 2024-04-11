@@ -11,7 +11,7 @@ import SwiftUI
 /// ## Topics
 ///
 /// ### Initializing a Paywall View
-/// - ``PaywallView/init(trigger:source:params:onComplete:)``
+/// - ``PaywallView/init(trigger:source:params:alternativePaywall:onComplete:)``
 ///
 /// ## Example
 ///
@@ -20,18 +20,26 @@ import SwiftUI
 ///     trigger: "user_trial_ended",
 ///     source: "onboarding",
 ///     params: ["user_id": "12345"],
-///     onComplete: {
+///		alternativePaywall: AlternativePaywall(variant: "0002") {
+///			VStack {
+///				Text("This is an Alternative paywall")
+///				Button("Dismiss") {
+///					displayPaywall.toggle()
+///				}
+///			}
+///		},
+///     onComplete: { error in
 ///         isPresented = false
 ///     }
 /// )
 /// ```
-public struct PaywallView<AlternativePaywall: View>: View {
+public struct PaywallView<Paywall: View>: View {
     @AppStorage(.paywallSource) private var paywallSource = ""
 
     private let trigger: String
     private let source: String
     private let params: [String: Any]?
-    private let alternativePaywall: AlternativePaywall
+    private let alternativePaywall: AlternativePaywall<Paywall>
     private var onComplete: (PaywallPresentationError?) -> Void
 
     /// Creates a `PaywallView` instance.
@@ -40,20 +48,20 @@ public struct PaywallView<AlternativePaywall: View>: View {
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
     ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
-    ///   - alternativePaywall: View to be presented in case the designated paywall can't be presented
+    ///   - alternativePaywall: View to be presented in case the designated paywall can't be shown. It must contain a variat value to send in case of AB test.
     ///   - onComplete: A closure called upon the completion of the paywall interaction. It will return an optional presentation error in case of issues presenting the designated paywall.
     public init(
         trigger: String,
         source: String,
         params: [String: Any]? = nil,
-        @ViewBuilder alternativePaywall: () -> AlternativePaywall,
+        alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.trigger = trigger
         self.source = source
         self.params = params
         self.onComplete = onComplete
-        self.alternativePaywall = alternativePaywall()
+        self.alternativePaywall = alternativePaywall
     }
 
     /// Creates a `PaywallView` instance.
@@ -68,12 +76,12 @@ public struct PaywallView<AlternativePaywall: View>: View {
         source: String,
         params: [String: Any]? = nil,
         onComplete: @escaping (PaywallPresentationError?) -> Void
-    ) where AlternativePaywall == EmptyView {
+    ) where Paywall == EmptyView {
         self.trigger = trigger
         self.source = source
         self.params = params
         self.onComplete = onComplete
-        alternativePaywall = EmptyView()
+        alternativePaywall = AlternativePaywall(variant: "", paywall: { EmptyView() })
     }
 
     public var body: some View {
@@ -90,7 +98,33 @@ public struct PaywallView<AlternativePaywall: View>: View {
     }
 }
 
-public enum PaywallPresentationError {
+/// `AlternativePaywall` is a generic SwiftUI view struct that encapsulates a user-defined view.
+///
+/// This structure allows you to define a customizable paywall component in your SwiftUI application.
+/// It's generic over `Content`, which is a type that conforms to the `View` protocol. This flexibility
+/// allows `AlternativePaywall` to wrap any SwiftUI view.
+///
+/// `AlternativePaywall` is used in case a user is part of a specific variant that doesn't have any Superwall paywall associated to it.
+///
+/// - Parameters:
+///   - variant: A `String` that can be used to identify different variants of the paywall.
+///   - paywall: A closure that returns a `Content` view.
+///
+public struct AlternativePaywall<Content: View>: View {
+    var variant: String
+    let paywall: () -> Content
+
+    public var body: some View {
+        paywall()
+    }
+
+    public init(variant: String, @ViewBuilder paywall: @escaping () -> Content) {
+        self.variant = variant
+        self.paywall = paywall
+    }
+}
+
+public enum PaywallPresentationError: Error {
     /// The user was assigned to a holdout.
     ///
     /// A holdout is a control group which you can analyse against
