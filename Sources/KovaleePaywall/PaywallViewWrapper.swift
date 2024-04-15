@@ -71,8 +71,9 @@ struct SuperwallPaywallView<Paywall: View>: View {
 
                     await Kovalee.handlePaywallABTest(withVariant: alternativePaywall.variant)
                 }
+
+                Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
             }
-            Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
         }
     }
 }
