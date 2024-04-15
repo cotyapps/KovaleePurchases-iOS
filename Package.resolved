@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/amplitude/Amplitude-Swift",
         "state": {
           "branch": null,
-          "revision": "35f253db41cf68d220390946c7ad7f344665d763",
-          "version": "1.3.6"
+          "revision": "891da3a2892df519a4ccf51a8442f8a5110623f0",
+          "version": "1.4.4"
         }
       },
       {
@@ -104,9 +104,9 @@
         "package": "KovaleeSDK",
         "repositoryURL": "https://github.com/cotyapps/Kovalee-iOS-SDK",
         "state": {
-          "branch": "paywall-kit",
-          "revision": "cd88f5303c33693d26e323e531f09ceccc7344af",
-          "version": null
+          "branch": null,
+          "revision": "64a395f158d37bf9a6b14712a399e1f6a798cd82",
+          "version": "1.9.0"
         }
       },
       {
