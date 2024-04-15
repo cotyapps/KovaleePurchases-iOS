@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2024-04-15
+### :sparkles: New Features
+- [`46a6508`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/46a6508c9560121fa232c6ff888740be7bcde5be) - new library to handle paywall presentation using Superwall *(commit by [@fto-k](https://github.com/fto-k))*
+- [`5138ae9`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/5138ae94bc05010803d2cfd521a4f9e3ef863585) - introducing PaywallViewController to present paywalls in UIKit *(commit by [@fto-k](https://github.com/fto-k))*
+- [`9af4bb4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/9af4bb4f7b5a072caa90a348f0b93a5cd726448b) - adding viewController to completion block to dismiss paywall *(commit by [@fto-k](https://github.com/fto-k))*
+- [`2f6f999`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/2f6f9995a9a7ee54b3491f3f680762ed2b980678) - implemented SuperviewViewController *(commit by [@fto-k](https://github.com/fto-k))*
+- [`c428867`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/c428867b7edcca62d8eb857ebbc9e4f665145f94) - implemented extension to present KPaywallViewController *(commit by [@fto-k](https://github.com/fto-k))*
+- [`d166fe8`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/d166fe8a07a048bd220f70e7b7459fe0c11e8762) - adde parameter to handle forcing AB variants *(commit by [@fto-k](https://github.com/fto-k))*
+- [`6b8935e`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/6b8935ef62c6709e738ed97a16becd7ccd3c6f5d) - allowing Alternative Paywall injection in case of error presenting SW one *(commit by [@fto-k](https://github.com/fto-k))*
+- [`72eb8cb`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/72eb8cb468cea8c4babb94ebe5d9c92c672ed486) - AB test handling for alternative paywalls *(commit by [@fto-k](https://github.com/fto-k))*
+- [`bf0b92e`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/bf0b92e0b8aeb01e071ad902f02ea68eba4499a5) - AB test handling for alternative paywalls *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :bug: Bug Fixes
+- [`ffe6568`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/ffe6568a53c60b600b1bd109d5d8a26984f01e9b) - KPaywallViewController interface public *(commit by [@fto-k](https://github.com/fto-k))*
+- [`86a4013`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/86a401398fe870868614486106ac11b767e1a012) - cleaned up implementation *(commit by [@fto-k](https://github.com/fto-k))*
+- [`88f1dda`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/88f1dda224a956c1c8b1e73086c0da98722e1fd7) - setting correct paywall view event + code cleanup *(commit by [@fto-k](https://github.com/fto-k))*
+- [`93a2727`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/93a2727520dc20a004eaa2f80ab03d4f0c66f37f) - fixed events sending order *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`f267401`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/f26740115d43eb4bed3ad14d28f2fc19d8a05a42) - code refactoring *(commit by [@fto-k](https://github.com/fto-k))*
+- [`75b6cff`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/75b6cfff5b444657eddf76b009818435746c8ba0) - added documentation *(commit by [@fto-k](https://github.com/fto-k))*
+- [`5e4f55d`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/5e4f55dcef5358c44a77eeb75624bc76db10242c) - cleaned up UIKit code *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.3.5] - 2024-02-23
 ### :sparkles: New Features
 - [`9f34e68`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/9f34e68a9daaf4856d6939dea2ce6716b47e1f49) - exposing sk1Product *(commit by [@fto-k](https://github.com/fto-k))*
@@ -79,3 +103,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.3.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.1...1.3.2
 [1.3.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.3...1.3.4
 [1.3.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.4...1.3.5
+[1.4.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.5...1.4.0
