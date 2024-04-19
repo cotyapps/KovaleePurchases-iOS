@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2024-04-19
+### :wrench: Chores
+- [`6adc625`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/6adc62551670a467621c7900464121e8a453654c) - updated minumum dependency version in podspecs *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.2] - 2024-04-15
 ### :wrench: Chores
 - [`00891b4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/00891b4c65704540aaa61d899f25894b7bc4bd1d) - updated privacy manifest *(commit by [@fto-k](https://github.com/fto-k))*
@@ -117,3 +122,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.4.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.3.5...1.4.0
 [1.5.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.0...1.5.1
 [1.5.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.1...1.5.2
+[1.5.3]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.2...1.5.3
