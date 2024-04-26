@@ -11,18 +11,10 @@ class SuperwallPaywallHandler {
 
     func retrievePaywall(
         event: String,
-        source: String,
         params: [String: Any]?
     ) async -> PaywallViewController? {
         do {
-            let paywallController = try await getPaywall(
-                event: event,
-                source: source,
-                params: params
-            )
-            await Kovalee.handlePaywallABTest(withVariant: paywallController.info.name)
-
-            return paywallController
+            return try await getPaywall(event: event, params: params)
         } catch {
             KLogger.error("❌ 💸 Paywall not loaded with error: \(error)")
             if error is PaywallSkippedReason {
@@ -36,7 +28,6 @@ class SuperwallPaywallHandler {
 
     private func getPaywall(
         event: String,
-        source _: String,
         params: [String: Any]?
     ) async throws -> PaywallViewController {
         do {

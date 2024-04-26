@@ -1,3 +1,4 @@
+import KovaleeSDK
 import SuperwallKit
 import SwiftUI
 
@@ -18,7 +19,6 @@ import SwiftUI
 /// ```swift
 /// PaywallView(
 ///     trigger: "user_trial_ended",
-///     source: "onboarding",
 ///     params: ["user_id": "12345"],
 ///		alternativePaywall: AlternativePaywall(variant: "0002") {
 ///			VStack {
@@ -34,10 +34,7 @@ import SwiftUI
 /// )
 /// ```
 public struct PaywallView<Paywall: View>: View {
-    @AppStorage(.paywallSource) private var paywallSource = ""
-
     private let trigger: String
-    private let source: String
     private let params: [String: Any]?
     private let alternativePaywall: AlternativePaywall<Paywall>
     private var onComplete: (PaywallPresentationError?) -> Void
@@ -46,19 +43,16 @@ public struct PaywallView<Paywall: View>: View {
     ///
     /// - Parameters:
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - alternativePaywall: View to be presented in case the designated paywall can't be shown. It must contain a variat value to send in case of AB test.
     ///   - onComplete: A closure called upon the completion of the paywall interaction. It will return an optional presentation error in case of issues presenting the designated paywall.
     public init(
         trigger: String,
-        source: String,
         params: [String: Any]? = nil,
         alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.trigger = trigger
-        self.source = source
         self.params = params
         self.onComplete = onComplete
         self.alternativePaywall = alternativePaywall
@@ -68,17 +62,14 @@ public struct PaywallView<Paywall: View>: View {
     ///
     /// - Parameters:
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - onComplete: A closure called upon the completion of the paywall interaction. It will return an optional presentation error in case of issues presenting the designated paywall.
     public init(
         trigger: String,
-        source: String,
         params: [String: Any]? = nil,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) where Paywall == EmptyView {
         self.trigger = trigger
-        self.source = source
         self.params = params
         self.onComplete = onComplete
         alternativePaywall = AlternativePaywall(variant: "", paywall: { EmptyView() })
@@ -88,13 +79,9 @@ public struct PaywallView<Paywall: View>: View {
         SuperwallPaywallView(
             event: trigger,
             params: params,
-            source: source,
             alternativePaywall: alternativePaywall,
             onComplete: onComplete
         )
-        .onAppear {
-            paywallSource = source
-        }
     }
 }
 
@@ -116,6 +103,11 @@ public struct AlternativePaywall<Content: View>: View {
 
     public var body: some View {
         paywall()
+            .onAppear {
+                Task {
+                    await Kovalee.handlePaywallABTest(withVariant: variant)
+                }
+            }
     }
 
     public init(variant: String, @ViewBuilder paywall: @escaping () -> Content) {

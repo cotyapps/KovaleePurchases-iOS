@@ -9,7 +9,6 @@ import SwiftUI
 /// - Parameters:
 ///   - isPresented: A binding to a Boolean value that determines whether to present the paywall.
 ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
 ///   - params: Optional parameters to send to Superwall for filtering audiences.
 ///   - alternativePaywall: View To be presented in case the designated paywall can't be presented
 ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
@@ -29,7 +28,6 @@ import SwiftUI
 ///         .fullScreenPaywall(
 ///             isPresented: $showPaywall,
 ///             trigger: "button_click",
-///             source: "ContentView",
 ///             params: ["user_id": "12345"],
 ///				alternativePaywall: AlternativePaywall(variant: "0002") {
 ///					VStack {
@@ -56,14 +54,12 @@ public extension View {
     /// - Parameters:
     ///   - isPresented: A binding to a Boolean that determines whether to present the paywall.
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - alternativePaywall: View To be presented in case the designated paywall can't be presented
     ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
     func fullScreenPaywall<Paywall: View>(
         isPresented: Binding<Bool>,
         trigger: String,
-        source: String,
         params: [String: Any]? = nil,
         alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping ((PaywallPresentationError?) -> Void)
@@ -71,7 +67,6 @@ public extension View {
         fullScreenCover(isPresented: isPresented) {
             PaywallView(
                 trigger: trigger,
-                source: source,
                 params: params,
                 alternativePaywall: alternativePaywall,
                 onComplete: onComplete
@@ -84,18 +79,16 @@ public extension View {
     /// - Parameters:
     ///   - isPresented: A binding to a Boolean that determines whether to present the paywall.
     ///   - trigger: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - onComplete: An closure called when the paywall should been dismissed, you are in charge of dismissing it. It will return an error of type ``PaywallPresentationError`` in case of issues presenting the designated paywall.
     func fullScreenPaywall(
         isPresented: Binding<Bool>,
         trigger: String,
-        source: String,
         params: [String: Any]? = nil,
         onComplete: @escaping ((PaywallPresentationError?) -> Void)
     ) -> some View {
         fullScreenCover(isPresented: isPresented) {
-            PaywallView(trigger: trigger, source: source, params: params, onComplete: onComplete)
+            PaywallView(trigger: trigger, params: params, onComplete: onComplete)
         }
     }
 }

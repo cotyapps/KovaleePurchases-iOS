@@ -1,7 +1,9 @@
 import Foundation
 import KovaleeFramework
+import KovaleeRemoteConfig
 import KovaleeSDK
 import SuperwallKit
+import SwiftUI
 
 extension PaywallManagerCreator: Creator {
     public func createImplementation(
@@ -48,6 +50,8 @@ extension Kovalee {
 }
 
 class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
+    @AppStorage(.paywallSource) var paywallSource = ""
+
     init(withApiKey apiKey: String) {
         KLogger.debug("💸 Initializing Superwall")
 
@@ -63,11 +67,50 @@ class SuperwallWrapperImpl: NSObject, PaywallManager, Manager {
             options: options
         )
 
+        Superwall.shared.delegate = self
         purchaseController.syncSubscriptionStatus()
     }
 
     private let purchaseController: PurchaseManager
     private let options: SuperwallOptions
+    private var source: String?
+}
+
+extension SuperwallWrapperImpl: SuperwallDelegate {
+    func handleSuperwallEvent(withInfo eventInfo: SuperwallEventInfo) {
+        switch eventInfo.event {
+        case let .paywallOpen(paywallInfo: info):
+            Task {
+                await Kovalee.handlePaywallABTest(withVariant: info.name)
+                if let source {
+                    Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
+                }
+            }
+        case let .triggerFire(eventName, _):
+            source = eventName
+            paywallSource = eventName
+
+        case .paywallPresentationRequest(status: _, reason: let reason):
+            guard let reason else {
+                return
+            }
+
+            switch reason {
+            case let .holdout(experiment) where experiment.variant.type == .holdout:
+                if let source {
+                    Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
+                }
+
+            default:
+                Kovalee.sendEvent(
+                    withName: "paywall_error",
+                    andProperties: ["error": reason.localizedDescription]
+                )
+            }
+        default:
+            return
+        }
+    }
 }
 
 extension KovaleeFramework.LogLevel {

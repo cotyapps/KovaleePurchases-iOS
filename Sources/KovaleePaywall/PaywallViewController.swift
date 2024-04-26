@@ -1,4 +1,3 @@
-import KovaleeSDK
 import SuperwallKit
 import UIKit
 
@@ -10,7 +9,6 @@ import UIKit
 /// ```swift
 /// let paywallViewController = KPaywallViewController(
 ///			event: "button_click",
-///			source: "onboarding"
 ///			params: ["user_id": "12345"],
 ///			alternativePaywall: AlternativePaywallViewController(variant: "0002")
 ///		) { vc, error in
@@ -23,7 +21,6 @@ public class KPaywallViewController: UIViewController {
 
     private let event: String
     private let params: [String: Any]?
-    private let source: String
 
     private var alternativePaywall: AlternativePaywallController?
     private var onComplete: (UIViewController, PaywallPresentationError?) -> Void
@@ -53,14 +50,12 @@ public class KPaywallViewController: UIViewController {
     ///   - onComplete: A closure called upon the completion of the paywall interaction. Returns the current ViewController so it can be dismissed and an optional presentation error in case of issues displaying the designated paywall.
     public init(
         event: String,
-        source: String,
         params: [String: Any]?,
         alternativePaywall: AlternativePaywallController? = nil,
         onComplete: @escaping (UIViewController, PaywallPresentationError?) -> Void
     ) {
         self.event = event
         self.params = params
-        self.source = source
         self.onComplete = onComplete
         self.alternativePaywall = alternativePaywall
 
@@ -70,12 +65,6 @@ public class KPaywallViewController: UIViewController {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-
-        Kovalee.sendEvent(event: .pageView(screen: source))
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -89,18 +78,12 @@ public class KPaywallViewController: UIViewController {
             } else if let alternativePaywall = self.alternativePaywall {
                 hideLoadingView()
                 presentPaywallView(alternativePaywall)
-
-                await Kovalee.handlePaywallABTest(withVariant: alternativePaywall.variant)
             }
         }
     }
 
     private func loadPaywallView() async -> PaywallViewController? {
-        await paywallHandler.retrievePaywall(
-            event: event,
-            source: source,
-            params: params
-        )
+        await paywallHandler.retrievePaywall(event: event, params: params)
     }
 
     private func presentPaywallView(_ viewController: UIViewController) {

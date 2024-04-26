@@ -11,7 +11,6 @@ import UIKit
 ///     func showPaywall() {
 ///         presentFullScreenPaywallViewController(
 ///             trigger: "user_trial_ended",
-///             source: "example_screen",
 ///             params: ["user_id": "12345"],
 ///             alternativePaywall: AlternativePaywallViewController(variant: "0002")
 ///             onComplete: {
@@ -29,20 +28,17 @@ public extension UIViewController {
     ///
     /// - Parameters:
     ///   - event: The event trigger for showing the paywall. It refers to the event_name in Superwall.
-    ///   - source: The source from where the paywall has been triggered (ie.  onboarding, home, user profiel etc...). This is useful for tracking purposes.
     ///   - params: Optional parameters to send to Superwall for filtering audiences.
     ///   - alternativePaywall: Optional View Controller to be displayed in case the designated paywall can't be presented.
     ///   - onComplete: A closure called when the paywall should been dismissed, you are in charge of dismissing it. Returns the current ViewController so it can be dismissed and an optional presentation error in case of issues displaying the designated paywall.
     func presentFullScreenPaywallViewController(
         trigger: String,
-        source: String,
         params: [String: Any]? = nil,
         alternativePaywall: AlternativePaywallController? = nil,
         onComplete: @escaping (UIViewController, PaywallPresentationError?) -> Void
     ) {
         let paywallViewController = KPaywallViewController(
             event: trigger,
-            source: source,
             params: params,
             alternativePaywall: alternativePaywall,
             onComplete: onComplete

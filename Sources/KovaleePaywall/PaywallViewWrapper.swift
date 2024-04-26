@@ -1,7 +1,3 @@
-import KovaleeFramework
-import KovaleePurchases
-import KovaleeRemoteConfig
-import KovaleeSDK
 import SuperwallKit
 import SwiftUI
 
@@ -18,7 +14,6 @@ struct PaywallViewControllerWrapper: UIViewControllerRepresentable {
 struct SuperwallPaywallView<Paywall: View>: View {
     let event: String
     let params: [String: Any]?
-    let source: String
 
     var alternativePaywall: AlternativePaywall<Paywall>
 
@@ -31,13 +26,11 @@ struct SuperwallPaywallView<Paywall: View>: View {
     init(
         event: String,
         params: [String: Any]?,
-        source: String,
         alternativePaywall: AlternativePaywall<Paywall>,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.event = event
         self.params = params
-        self.source = source
         self.alternativePaywall = alternativePaywall
         paywallHandler = SuperwallPaywallHandler(onComplete: onComplete)
     }
@@ -61,18 +54,12 @@ struct SuperwallPaywallView<Paywall: View>: View {
         .onAppear {
             Task {
                 if let paywall = await paywallHandler.retrievePaywall(
-                    event: event,
-                    source: source,
-                    params: params
+                    event: event, params: params
                 ) {
                     viewState = .paywall(paywall)
                 } else {
                     viewState = .alternativePaywall
-
-                    await Kovalee.handlePaywallABTest(withVariant: alternativePaywall.variant)
                 }
-
-                Kovalee.sendEvent(event: BasicEvent.pageViewPaywall(source: source))
             }
         }
     }
