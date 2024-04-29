@@ -34,6 +34,7 @@ class SuperwallPaywallHandler {
             let triggerEvent = await Kovalee.paywallTriggerEventFromABTest() ?? event
             var userParams = params ?? [String: Any]()
             userParams["event_name"] = triggerEvent
+            Superwall.shared.setUserAttributes(userParams)
             return try await Superwall.shared.getPaywall(
                 forEvent: triggerEvent,
                 params: userParams,
