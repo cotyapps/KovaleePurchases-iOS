@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2024-04-29
+### :sparkles: New Features
+- [`6baac6c`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/6baac6c1a2849965794742ee98ddd0f3ef711375) - updated PaywallKit to handle holdouts and SW placements *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.4] - 2024-04-23
 ### :sparkles: New Features
 - [`6288658`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/6288658b4c48e30b8459582e6df93a4cabc738ea) - duplicated functions with async code to have completion blocks interface *(commit by [@fto-k](https://github.com/fto-k))*
@@ -129,3 +134,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.1...1.5.2
 [1.5.3]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.2...1.5.3
 [1.5.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.3...1.5.4
+[1.5.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.4...1.5.5
