@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.7] - 2024-04-30
+### :sparkles: New Features
+- [`e3a1bf4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/e3a1bf4a07ba79474998e2499c68ea48a9c685dd) - new async login function with customerInfo return *(commit by [@fto-k](https://github.com/fto-k))*
+- [`a23c02b`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/a23c02b28242d778632ba40c3fba9257f5f984d4) - new async login function with customerInfo return *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :bug: Bug Fixes
+- [`4ff1576`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/4ff15762b0955a3bf593cf13a9342bae5f2c303d) - setting user attributes *(commit by [@fto-k](https://github.com/fto-k))*
+- [`07b36a7`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/07b36a76ea805613e357c4b6beb9d1a2b11a1d53) - fixed SDK dependency *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.5] - 2024-04-29
 ### :sparkles: New Features
 - [`6baac6c`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/6baac6c1a2849965794742ee98ddd0f3ef711375) - updated PaywallKit to handle holdouts and SW placements *(commit by [@fto-k](https://github.com/fto-k))*
@@ -135,3 +145,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.3]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.2...1.5.3
 [1.5.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.3...1.5.4
 [1.5.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.4...1.5.5
+[1.5.7]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.6...1.5.7
