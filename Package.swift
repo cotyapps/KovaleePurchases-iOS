@@ -19,7 +19,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", from: Version(1, 9, 0)),
+        //        .package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", from: Version(1, 9, 8)),
+        .package(url: "https://github.com/cotyapps/Kovalee-iOS-SDK", branch: "master"),
         .package(url: "https://github.com/RevenueCat/purchases-ios", from: Version(4, 25, 0)),
         .package(url: "https://github.com/cotyapps/KovaleeRemoteConfig-iOS", .upToNextMajor(from: Version(1, 0, 0))),
         .package(url: "https://github.com/superwall-me/Superwall-iOS", .upToNextMajor(from: Version(3, 0, 0))),

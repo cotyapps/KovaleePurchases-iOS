@@ -1,10 +1,11 @@
 import Foundation
 import KovaleeFramework
 import KovaleeSDK
+import RevenueCat
 
 extension PurchaseManagerCreator: Creator {
     public func createImplementation(
-        withConfiguration _: Configuration,
+        withConfiguration _: KovaleeSDK.Configuration,
         andKeys keys: KovaleeKeys
     ) -> Manager {
         guard let key = keys.revenueCat else {
@@ -24,6 +25,45 @@ public extension Kovalee {
     ///    - userId: a string representing the userId to be set
     static func setRevenueCatUserId(userId: String) {
         shared.kovaleeManager?.setRevenueCatUserId(userId: userId)
+    }
+
+    /// Set a specific userId for RevenueCat.
+    /// The function is async and can throw
+    ///
+    /// - Parameters:
+    ///    - userId: a string representing the userId to be set
+    /// - Returns:
+    ///    - customerInfo: customer information
+    ///    - created: returns true if the user has been created
+    static func setRevenueCatUserId(userId: String) async throws -> (CustomerInfo, created: Bool)? {
+        try await shared.kovaleeManager?
+            .setRevenueCatUserId(userId: userId) as? (CustomerInfo, created: Bool)
+    }
+
+    /// Set a specific userId for RevenueCat.
+    /// The function is async and can throw
+    ///
+    /// - Parameters:
+    ///    - userId: a string representing the userId to be set
+    /// - Returns:
+    ///    - customerInfo: customer information
+    ///    - created: returns true if the user has been created
+    static func setRevenueCatUserId(
+        userId: String,
+        withCompletion completion: @escaping (Result<(CustomerInfo, created: Bool)?, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await Self.setRevenueCatUserId(userId: userId)
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
+        }
     }
 
     /// Retrieve the ``CustomerInfo`` for the current customer
