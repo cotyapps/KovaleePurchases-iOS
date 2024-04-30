@@ -23,6 +23,7 @@ public extension Kovalee {
     ///
     /// - Parameters:
     ///    - userId: a string representing the userId to be set
+    @available(swift, deprecated: 1.5.5, message: "Please migrate to setRevenueCatUserId async method")
     static func setRevenueCatUserId(userId: String) {
         shared.kovaleeManager?.setRevenueCatUserId(userId: userId)
     }
@@ -35,9 +36,11 @@ public extension Kovalee {
     /// - Returns:
     ///    - customerInfo: customer information
     ///    - created: returns true if the user has been created
-    static func setRevenueCatUserId(userId: String) async throws -> (CustomerInfo, created: Bool)? {
-        try await shared.kovaleeManager?
-            .setRevenueCatUserId(userId: userId) as? (CustomerInfo, created: Bool)
+    static func setRevenueCatUserId(userId: String) async throws -> (info: CustomerInfo, created: Bool) {
+        guard let manager = shared.kovaleeManager else {
+            throw PurchaseError.initializationProblem
+        }
+        return try await manager.setRevenueCatUserId(userId: userId) as! (CustomerInfo, created: Bool)
     }
 
     /// Set a specific userId for RevenueCat.
@@ -50,7 +53,7 @@ public extension Kovalee {
     ///    - created: returns true if the user has been created
     static func setRevenueCatUserId(
         userId: String,
-        withCompletion completion: @escaping (Result<(CustomerInfo, created: Bool)?, Error>) -> Void
+        withCompletion completion: @escaping (Result<(info: CustomerInfo, created: Bool), Error>) -> Void
     ) {
         Task {
             do {

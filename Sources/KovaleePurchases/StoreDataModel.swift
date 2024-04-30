@@ -3,6 +3,10 @@ import KovaleeFramework
 import RevenueCat
 
 // swiftlint:disable file_length
+enum PurchaseError: Error {
+    case initializationProblem
+}
+
 /// A container for the most recent customer info
 public class CustomerInfo: AbstractCustomerInfo, Encodable {
     /// ``EntitlementInfos`` attached to this customer info.
@@ -439,7 +443,7 @@ public class Package: Identifiable, AbstractPackage, Encodable {
         //		try container.encode(rcPackage, forKey: .rcPackage)
     }
 
-    internal required init() {
+    required init() {
         identifier = "0"
         packageType = .unknown
         storeProduct = StoreProduct.empty()
