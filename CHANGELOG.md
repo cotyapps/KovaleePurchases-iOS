@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.8] - 2024-05-03
+### :sparkles: New Features
+- [`d6b22c7`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/d6b22c7a448dbada9cb559121991c909490cf700) - updated to support RC Billing *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.7] - 2024-04-30
 ### :sparkles: New Features
 - [`e3a1bf4`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/e3a1bf4a07ba79474998e2499c68ea48a9c685dd) - new async login function with customerInfo return *(commit by [@fto-k](https://github.com/fto-k))*
@@ -146,3 +151,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.4]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.3...1.5.4
 [1.5.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.4...1.5.5
 [1.5.7]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.6...1.5.7
+[1.5.8]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.7...1.5.8
