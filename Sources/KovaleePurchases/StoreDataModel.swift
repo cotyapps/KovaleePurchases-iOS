@@ -158,12 +158,12 @@ public class EntitlementInfo: NSObject, Encodable {
         latestPurchaseDate = info.latestPurchaseDate
         originalPurchaseDate = info.originalPurchaseDate
         expirationDate = info.expirationDate
-        store = Store(rawValue: info.store.rawValue)!
+        store = Store(rawValue: info.store.rawValue) ?? .unknownStore
         productIdentifier = info.productIdentifier
         isSandbox = info.isSandbox
         unsubscribeDetectedAt = info.unsubscribeDetectedAt
         billingIssueDetectedAt = info.billingIssueDetectedAt
-        ownershipType = PurchaseOwnershipType(rawValue: info.ownershipType.rawValue)!
+        ownershipType = PurchaseOwnershipType(rawValue: info.ownershipType.rawValue) ?? .unknown
     }
 }
 
@@ -232,6 +232,12 @@ public enum Store: Int, Encodable {
 
     /// For entitlements granted via the Amazon Store.
     case amazon = 6
+
+    /// For entitlements granted via RC Billing
+    case rcBilling = 7
+
+    /// For entitlements granted via RevenueCat's External Purchases API.
+    case external = 8
 }
 
 public class Product: Encodable {
