@@ -69,6 +69,40 @@ public extension Kovalee {
         }
     }
 
+    /// Logout the current user from RevenueCat.
+    /// The function is async and can throw
+    ///
+    /// - Returns:
+    ///    - customerInfo: customer information
+    static func logoutRevenueCatUser() async throws -> CustomerInfo {
+        guard let manager = shared.kovaleeManager else {
+            throw PurchaseError.initializationProblem
+        }
+        return try await manager.logoutRevenueCatUser() as! CustomerInfo
+    }
+
+    /// Logout the current user from RevenueCat.
+    /// The function is async and can throw
+    ///
+    /// - Returns:
+    ///    - customerInfo: customer information
+    static func logoutRevenueCatUser(
+        withCompletion completion: @escaping (Result<CustomerInfo, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await Self.logoutRevenueCatUser()
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
+        }
+    }
+
     /// Retrieve the ``CustomerInfo`` for the current customer
     ///
     /// - Returns: current customer information

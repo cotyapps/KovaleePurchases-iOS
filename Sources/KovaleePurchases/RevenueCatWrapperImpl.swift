@@ -25,6 +25,11 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         }
     }
 
+    func logout() async throws -> AbstractCustomerInfo {
+        let customerInfo = try await Purchases.shared.logOut()
+        return CustomerInfo(info: customerInfo)
+    }
+
     func setUserId(userId: String) async throws -> (AbstractCustomerInfo, created: Bool) {
         let result = try await Purchases.shared.logIn(userId)
         return (CustomerInfo(info: result.customerInfo), result.created)
