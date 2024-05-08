@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.9] - 2024-05-08
+### :sparkles: New Features
+- [`1e7ed31`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/1e7ed316b6388550016b7401f93b905853eb1407) - new function to logout current RevenueCat user *(commit by [@fto-k](https://github.com/fto-k))*
+- [`87003ea`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/87003ea7732a9fd9b42a30c441177d176afebcd9) - migrated functions with completion blocks to return a Result<_, Error> *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`47ceb1e`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/47ceb1e34ee513c41003a2a7990d38f4bf74bc0e) - set correct dependencies version in podspec *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.8] - 2024-05-03
 ### :sparkles: New Features
 - [`d6b22c7`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/d6b22c7a448dbada9cb559121991c909490cf700) - updated to support RC Billing *(commit by [@fto-k](https://github.com/fto-k))*
@@ -152,3 +161,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.5]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.4...1.5.5
 [1.5.7]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.6...1.5.7
 [1.5.8]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.7...1.5.8
+[1.5.9]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.8...1.5.9
