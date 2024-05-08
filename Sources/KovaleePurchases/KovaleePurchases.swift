@@ -114,9 +114,20 @@ public extension Kovalee {
     ///
     /// - Parameters:
     ///    - completion: current customer information if returned.
-    static func customerInfo(withCompletion completion: @escaping (CustomerInfo?) -> Void) throws {
+    static func customerInfo(
+        withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
+    ) throws {
         Task {
-            try completion(await Self.customerInfo())
+            do {
+                let result = try await Self.customerInfo()
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -131,9 +142,20 @@ public extension Kovalee {
     ///
     /// - Parameters:
     ///    - completion: current customer information
-    static func syncPurchases(withCompletion completion: @escaping (CustomerInfo?) -> Void) throws {
+    static func syncPurchases(
+        withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
+    ) throws {
         Task {
-            try completion(await Self.syncPurchases())
+            do {
+                let result = try await Self.syncPurchases()
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -148,9 +170,20 @@ public extension Kovalee {
     ///
     /// - Parameters:
     ///    - completion: available offerings
-    static func fetchOfferings(withCompletion completion: @escaping (Offerings?) -> Void) throws {
+    static func fetchOfferings(
+        withCompletion completion: @escaping (Result<Offerings?, Error>) -> Void
+    ) throws {
         Task {
-            try completion(await Self.fetchOfferings())
+            do {
+                let result = try await Self.fetchOfferings()
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -165,9 +198,20 @@ public extension Kovalee {
     ///
     /// - Parameters:
     ///    - completion: available offering
-    static func fetchCurrentOffering(withCompletion completion: @escaping (Offering?) -> Void) throws {
+    static func fetchCurrentOffering(
+        withCompletion completion: @escaping (Result<Offering?, Error>) -> Void
+    ) throws {
         Task {
-            try completion(await Self.fetchCurrentOffering())
+            do {
+                let result = try await Self.fetchCurrentOffering()
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -187,10 +231,19 @@ public extension Kovalee {
     ///    - completion: current ``CustomerInfo``
     static func restorePurchases(
         fromSource source: String,
-        withCompletion completion: @escaping (CustomerInfo?) -> Void
+        withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
     ) throws {
         Task {
-            try completion(await Self.restorePurchases(fromSource: source))
+            do {
+                let result = try await Self.restorePurchases(fromSource: source)
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -213,10 +266,19 @@ public extension Kovalee {
     static func purchase(
         package: Package,
         fromSource source: String,
-        withCompletion completion: @escaping (PurchaseResultData?) -> Void
+        withCompletion completion: @escaping (Result<PurchaseResultData?, Error>) -> Void
     ) throws {
         Task {
-            try completion(await Self.purchase(package: package, fromSource: source))
+            do {
+                let result = try await Self.purchase(package: package, fromSource: source)
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
@@ -249,10 +311,22 @@ public extension Kovalee {
     static func purchaseSubscription(
         withId subscriptionId: String,
         fromSource source: String,
-        withCompletion completion: @escaping (PurchaseResultData?) -> Void
+        withCompletion completion: @escaping (Result<PurchaseResultData?, Error>) -> Void
     ) throws {
         Task {
-            try completion(await Self.purchaseSubscription(withId: subscriptionId, fromSource: source))
+            do {
+                let result = try await Self.purchaseSubscription(
+                    withId: subscriptionId,
+                    fromSource: source
+                )
+                DispatchQueue.main.async {
+                    completion(Result.success(result))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(Result.failure(error))
+                }
+            }
         }
     }
 
