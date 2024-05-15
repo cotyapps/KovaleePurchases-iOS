@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.10] - 2024-05-15
+### :bug: Bug Fixes
+- [`25349e8`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/25349e820dfadc97ee5a383adc282460699bb5fa) - possible fix for wrong paywall event_name *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.9] - 2024-05-08
 ### :sparkles: New Features
 - [`1e7ed31`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/1e7ed316b6388550016b7401f93b905853eb1407) - new function to logout current RevenueCat user *(commit by [@fto-k](https://github.com/fto-k))*
@@ -162,3 +167,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.7]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.6...1.5.7
 [1.5.8]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.7...1.5.8
 [1.5.9]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.8...1.5.9
+[1.5.10]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.9...1.5.10
