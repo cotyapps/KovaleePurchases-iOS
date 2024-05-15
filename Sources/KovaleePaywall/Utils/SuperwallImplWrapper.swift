@@ -23,7 +23,10 @@ extension PaywallManagerCreator: Creator {
 extension Kovalee {
     /// Usefull in case of forcing AB tests variants for testing purposes
     static func paywallTriggerEventFromABTest() async -> String? {
-        guard await experimentRunning() else {
+        guard
+            let kovaleeManager = Kovalee.shared.kovaleeManager,
+            kovaleeManager.debugModeOn()
+        else {
             return nil
         }
 
