@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.12] - 2024-05-21
+### :bug: Bug Fixes
+- [`b775f4d`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/b775f4d75c9c8abd3e4a386db3fb991df629afed) - RC user is now synched to Superwall *(commit by [@fto-k](https://github.com/fto-k))*
+- [`9239b5f`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/9239b5f6b51461912d8f28cb9f23db9581caca53) - importing dependency in Podfile *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.11] - 2024-05-21
 ### :bug: Bug Fixes
 - [`7e3306f`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/7e3306f8118e9824f0554d1457e7ae953c8cf9e1) - enforcing error when no paywall is returned and avoid holdout if not present *(commit by [@fto-k](https://github.com/fto-k))*
@@ -174,3 +180,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.9]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.8...1.5.9
 [1.5.10]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.9...1.5.10
 [1.5.11]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.10...1.5.11
+[1.5.12]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.11...1.5.12
