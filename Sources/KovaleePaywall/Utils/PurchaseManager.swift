@@ -15,6 +15,7 @@ final class PurchaseManager: PurchaseController {
     /// changing `Superwall.shared.subscriptionStatus`
     func syncSubscriptionStatus() {
         Task {
+            Superwall.shared.identify(userId: Purchases.shared.appUserID)
             for await customerInfo in Purchases.shared.customerInfoStream {
                 // Gets called whenever new CustomerInfo is available
                 let hasActiveSubscription = !customerInfo.activeSubscriptions.isEmpty
