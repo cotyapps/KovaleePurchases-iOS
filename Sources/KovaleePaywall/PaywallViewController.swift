@@ -17,6 +17,13 @@ import UIKit
 /// present(paywallViewController, animated: true, completion: nil)
 /// ```
 public class KPaywallViewController: UIViewController {
+    private enum ViewState {
+        case loading
+        case paywall(PaywallViewController)
+        case alternativePaywall(AlternativePaywallController)
+        case error(PaywallPresentationError)
+    }
+
     private var spinner: UIActivityIndicatorView?
 
     private let event: String
@@ -39,6 +46,8 @@ public class KPaywallViewController: UIViewController {
             }
         }
     }
+
+    private var state: ViewState = .loading
 
     /// Creates a `KPaywallViewController` instance.
     ///
@@ -72,18 +81,37 @@ public class KPaywallViewController: UIViewController {
         showLoadingView()
 
         Task { @MainActor in
-            if let paywallViewController = await self.loadPaywallView() {
+            switch await self.loadPaywallController() {
+            case let .paywall(paywallViewController):
                 hideLoadingView()
                 presentPaywallView(paywallViewController)
-            } else if let alternativePaywall = self.alternativePaywall {
+            case let .alternativePaywall(alternativePaywall):
                 hideLoadingView()
                 presentPaywallView(alternativePaywall)
+            case let .error(error):
+                onComplete(self, error)
+            default:
+                onComplete(self, .unknownError)
             }
         }
     }
 
-    private func loadPaywallView() async -> PaywallViewController? {
-        await paywallHandler.retrievePaywall(event: event, params: params)
+    private func loadPaywallController() async -> ViewState {
+        do {
+            let paywall = try await paywallHandler.retrievePaywall(event: event, params: params)
+            return .paywall(paywall)
+        } catch {
+            guard let reason = error as? PaywallSkippedReason else {
+                return .error(.unknownError)
+            }
+            let mappedError = PaywallPresentationError.mapFromSuperwall(reason: reason)
+
+            if case .holdout = mappedError, let alternativePaywall {
+                return .alternativePaywall(alternativePaywall)
+            } else {
+                return .error(mappedError)
+            }
+        }
     }
 
     private func presentPaywallView(_ viewController: UIViewController) {

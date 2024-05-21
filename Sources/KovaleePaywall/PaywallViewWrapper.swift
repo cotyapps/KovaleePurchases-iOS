@@ -15,23 +15,25 @@ struct SuperwallPaywallView<Paywall: View>: View {
     let event: String
     let params: [String: Any]?
 
-    var alternativePaywall: AlternativePaywall<Paywall>
+    var alternativePaywall: AlternativePaywall<Paywall>?
+    var onComplete: (PaywallPresentationError?) -> Void
 
     enum ViewState {
         case loading
         case paywall(PaywallViewController)
-        case alternativePaywall
+        case alternativePaywall(AlternativePaywall<Paywall>)
     }
 
     init(
         event: String,
         params: [String: Any]?,
-        alternativePaywall: AlternativePaywall<Paywall>,
+        alternativePaywall: AlternativePaywall<Paywall>?,
         onComplete: @escaping (PaywallPresentationError?) -> Void
     ) {
         self.event = event
         self.params = params
         self.alternativePaywall = alternativePaywall
+        self.onComplete = onComplete
         paywallHandler = SuperwallPaywallHandler(onComplete: onComplete)
     }
 
@@ -47,19 +49,32 @@ struct SuperwallPaywallView<Paywall: View>: View {
             case let .paywall(paywall):
                 PaywallViewControllerWrapper(viewController: paywall)
                     .ignoresSafeArea(edges: .all)
-            case .alternativePaywall:
+            case let .alternativePaywall(alternativePaywall):
                 alternativePaywall
             }
         }
         .onAppear {
             Task {
-                if let paywall = await paywallHandler.retrievePaywall(
-                    event: event, params: params
-                ) {
-                    viewState = .paywall(paywall)
-                } else {
-                    viewState = .alternativePaywall
-                }
+                await loadPaywallController()
+            }
+        }
+    }
+
+    private func loadPaywallController() async {
+        do {
+            let paywall = try await paywallHandler.retrievePaywall(event: event, params: params)
+            viewState = .paywall(paywall)
+        } catch {
+            guard let reason = error as? PaywallSkippedReason else {
+                onComplete(.unknownError)
+                return
+            }
+            let mappedError = PaywallPresentationError.mapFromSuperwall(reason: reason)
+
+            if case .holdout = mappedError, let alternativePaywall {
+                viewState = .alternativePaywall(alternativePaywall)
+            } else {
+                onComplete(mappedError)
             }
         }
     }
