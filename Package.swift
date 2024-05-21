@@ -30,6 +30,7 @@ let package = Package(
             dependencies: [
                 .SDK,
                 .revenueCat,
+                .superwall,
             ],
             resources: [
                 .copy("PrivacyInfo.xcprivacy"),

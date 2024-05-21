@@ -27,5 +27,6 @@ It's part of a broader project KovaleeSDK
 
   spec.dependency "KovaleeSDK", '>= 1.9.12'
   spec.dependency "RevenueCat", '>= 4.38.0'
+  spec.dependency "SuperwallKit", '>= 3.5.0'
 
 end
