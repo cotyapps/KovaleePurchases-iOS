@@ -26,6 +26,7 @@ public extension Kovalee {
     @available(swift, deprecated: 1.5.5, message: "Please migrate to setRevenueCatUserId async method")
     static func setRevenueCatUserId(userId: String) {
         shared.kovaleeManager?.setRevenueCatUserId(userId: userId)
+        Kovalee.setAmplitudeUserId(userId: userId)
     }
 
     /// Set a specific userId for RevenueCat.
@@ -40,7 +41,9 @@ public extension Kovalee {
         guard let manager = shared.kovaleeManager else {
             throw PurchaseError.initializationProblem
         }
-        return try await manager.setRevenueCatUserId(userId: userId) as! (CustomerInfo, created: Bool)
+        let result = try await manager.setRevenueCatUserId(userId: userId) as! (CustomerInfo, created: Bool)
+        Kovalee.setAmplitudeUserId(userId: result.0.originalAppUserId)
+        return result
     }
 
     /// Set a specific userId for RevenueCat.
