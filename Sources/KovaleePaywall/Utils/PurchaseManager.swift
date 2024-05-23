@@ -16,7 +16,6 @@ final class PurchaseManager: PurchaseController {
     func syncSubscriptionStatus() {
         Task {
             Superwall.shared.identify(userId: Purchases.shared.appUserID)
-            Kovalee.setAmplitudeUserId(userId: Purchases.shared.appUserID)
             for await customerInfo in Purchases.shared.customerInfoStream {
                 // Gets called whenever new CustomerInfo is available
                 let hasActiveSubscription = !customerInfo.activeSubscriptions.isEmpty
