@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.13] - 2024-05-30
+### :bug: Bug Fixes
+- [`828729b`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/828729b1f72e2c9c0d2fe632d93c4b2abcd3fc1d) - sync amplitude id with RC *(commit by [@fto-k](https://github.com/fto-k))*
+- [`8e8f444`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/8e8f444e5d004593598fec4748a41e0492950084) - rolled back changes *(commit by [@fto-k](https://github.com/fto-k))*
+- [`db0f188`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/db0f18807c64de279e8c39eb4cf9a914f18b85ca) - SuperwallPaywallHandler loses reference in SwiftUI view *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.12] - 2024-05-21
 ### :bug: Bug Fixes
 - [`b775f4d`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/b775f4d75c9c8abd3e4a386db3fb991df629afed) - RC user is now synched to Superwall *(commit by [@fto-k](https://github.com/fto-k))*
@@ -181,3 +188,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.10]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.9...1.5.10
 [1.5.11]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.10...1.5.11
 [1.5.12]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.11...1.5.12
+[1.5.13]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.12...1.5.13
