@@ -3,11 +3,10 @@ import KovaleeSDK
 import SuperwallKit
 
 class SuperwallPaywallHandler {
-    private var onComplete: (PaywallPresentationError?) -> Void
+    private init() {}
 
-    init(onComplete: @escaping (PaywallPresentationError?) -> Void) {
-        self.onComplete = onComplete
-    }
+    static let shared = SuperwallPaywallHandler()
+    var onComplete: ((PaywallPresentationError?) -> Void)?
 
     func retrievePaywall(
         event: String,
@@ -48,6 +47,6 @@ extension SuperwallPaywallHandler: PaywallViewControllerDelegate {
             return
         }
 
-        onComplete(nil)
+        onComplete?(nil)
     }
 }

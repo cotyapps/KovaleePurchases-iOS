@@ -31,21 +31,7 @@ public class KPaywallViewController: UIViewController {
 
     private var alternativePaywall: AlternativePaywallController?
     private var onComplete: (UIViewController, PaywallPresentationError?) -> Void
-    private lazy var paywallHandler = SuperwallPaywallHandler { [weak self] error in
-        Task { @MainActor in
-            guard let self else {
-                return
-            }
-
-            if let error {
-                if self.alternativePaywall == nil {
-                    self.onComplete(self, error)
-                }
-            } else {
-                self.onComplete(self, nil)
-            }
-        }
-    }
+    private var paywallHandler = SuperwallPaywallHandler.shared
 
     private var state: ViewState = .loading
 
@@ -69,6 +55,22 @@ public class KPaywallViewController: UIViewController {
         self.alternativePaywall = alternativePaywall
 
         super.init(nibName: nil, bundle: nil)
+
+        paywallHandler.onComplete = { [weak self] error in
+            Task { @MainActor in
+                guard let self else {
+                    return
+                }
+
+                if let error {
+                    if self.alternativePaywall == nil {
+                        self.onComplete(self, error)
+                    }
+                } else {
+                    self.onComplete(self, nil)
+                }
+            }
+        }
     }
 
     @available(*, unavailable)

@@ -34,10 +34,10 @@ struct SuperwallPaywallView<Paywall: View>: View {
         self.params = params
         self.alternativePaywall = alternativePaywall
         self.onComplete = onComplete
-        paywallHandler = SuperwallPaywallHandler(onComplete: onComplete)
+        paywallHandler.onComplete = onComplete
     }
 
-    private var paywallHandler: SuperwallPaywallHandler
+    private var paywallHandler = SuperwallPaywallHandler.shared
     @State private var viewState: ViewState = .loading
 
     var body: some View {
