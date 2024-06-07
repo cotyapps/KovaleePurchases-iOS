@@ -35,11 +35,16 @@ extension Kovalee {
 
     /// Remember to set paywall_test_running in firebase otherwise data won't be recorded
     static func handlePaywallABTest(withVariant variant: String) async {
-        guard await experimentRunning() else {
+        guard
+            await experimentRunning(),
+            let kovaleeManager = Kovalee.shared.kovaleeManager
+        else {
             return
         }
-
+        let currentDebugModeStatus = kovaleeManager.debugModeOn()
+        kovaleeManager.setDebugMode(true)
         Kovalee.setAbTestValue(variant)
+        kovaleeManager.setDebugMode(currentDebugModeStatus)
     }
 
     private static func experimentRunning() async -> Bool {

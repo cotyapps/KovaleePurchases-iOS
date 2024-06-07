@@ -116,7 +116,7 @@ public extension Kovalee {
     ///    - completion: current customer information if returned.
     static func customerInfo(
         withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.customerInfo()
@@ -144,7 +144,7 @@ public extension Kovalee {
     ///    - completion: current customer information
     static func syncPurchases(
         withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.syncPurchases()
@@ -172,7 +172,7 @@ public extension Kovalee {
     ///    - completion: available offerings
     static func fetchOfferings(
         withCompletion completion: @escaping (Result<Offerings?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.fetchOfferings()
@@ -200,7 +200,7 @@ public extension Kovalee {
     ///    - completion: available offering
     static func fetchCurrentOffering(
         withCompletion completion: @escaping (Result<Offering?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.fetchCurrentOffering()
@@ -232,7 +232,7 @@ public extension Kovalee {
     static func restorePurchases(
         fromSource source: String,
         withCompletion completion: @escaping (Result<CustomerInfo?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.restorePurchases(fromSource: source)
@@ -267,7 +267,7 @@ public extension Kovalee {
         package: Package,
         fromSource source: String,
         withCompletion completion: @escaping (Result<PurchaseResultData?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.purchase(package: package, fromSource: source)
@@ -312,7 +312,7 @@ public extension Kovalee {
         withId subscriptionId: String,
         fromSource source: String,
         withCompletion completion: @escaping (Result<PurchaseResultData?, Error>) -> Void
-    ) throws {
+    ) {
         Task {
             do {
                 let result = try await Self.purchaseSubscription(
