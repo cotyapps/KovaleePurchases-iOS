@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.14] - 2024-06-07
+### :bug: Bug Fixes
+- [`4778364`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/4778364aa6333b09e5b0c9481a8b1f1f2b998fde) - forcing AB test variant to user *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`545ea4c`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/545ea4cd01c89acf4c02c70410815f2408e08331) - removed throws from functions with completion block *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.13] - 2024-05-30
 ### :bug: Bug Fixes
 - [`828729b`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/828729b1f72e2c9c0d2fe632d93c4b2abcd3fc1d) - sync amplitude id with RC *(commit by [@fto-k](https://github.com/fto-k))*
@@ -189,3 +197,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.11]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.10...1.5.11
 [1.5.12]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.11...1.5.12
 [1.5.13]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.12...1.5.13
+[1.5.14]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.13...1.5.14
