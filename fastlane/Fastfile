@@ -32,8 +32,13 @@ platform :ios do
     release("major")
   end
 
+  lane :pod do
+    pod_lib_lint
+    pod_push
+  end 
+
   def release(type)
-    # git_pull
+    git_pull
     podspec_name = "KovaleePurchases.podspec"
 
     # pod_lib_lint
