@@ -131,6 +131,14 @@ public extension Kovalee {
         }
     }
 
+    /// Set a user email for RevenueCat
+    ///
+    /// - Parameters:
+    ///    - email: a string representing the email to be set
+    static func setRevenueCatEmail(email: String) {
+        shared.kovaleeManager?.setRevenueCatEmail(email: email)
+    }
+
     /// Sync the purchases for the current customer
     ///
     /// - Returns: current customer information

@@ -39,6 +39,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         return (CustomerInfo(info: result.customerInfo), result.created)
     }
 
+    func setEmail(email: String) {
+        Purchases.shared.attribution.setEmail(email)
+    }
+
     func revenueCatUserId() -> String {
         Purchases.shared.appUserID
     }
