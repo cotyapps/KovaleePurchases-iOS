@@ -363,11 +363,19 @@ public extension Kovalee {
 }
 
 public extension Kovalee {
-    static func isUserInBundle(appCode: String, email: String) async throws -> Bool {
+    static func isUserInBundle(
+        bundleId: String,
+        appCode: String,
+        email: String
+    ) async throws -> Bool {
         guard let manager = shared.kovaleeManager else {
             throw PurchaseError.initializationProblem
         }
-        return try await manager.isUserInBundle(appCode: appCode, email: email)
+        return try await manager.isUserInBundle(
+            bundleId: bundleId,
+            appCode: appCode,
+            email: email
+        )
     }
 
     static func removeUserFromBundle() {
