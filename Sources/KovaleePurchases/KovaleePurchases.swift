@@ -361,3 +361,16 @@ public extension Kovalee {
         shared.kovaleeManager?.setPurchaseDelegate(delegate)
     }
 }
+
+public extension Kovalee {
+    static func isUserInBundle(appCode: String, email: String) async throws -> Bool {
+        guard let manager = shared.kovaleeManager else {
+            throw PurchaseError.initializationProblem
+        }
+        return try await manager.isUserInBundle(appCode: appCode, email: email)
+    }
+
+    static func removeUserFromBundle() {
+        shared.kovaleeManager?.removeUserFromBundle()
+    }
+}
