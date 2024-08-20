@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2024-08-20
+### :sparkles: New Features
+- [`00dfce5`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/00dfce5c92cbd9ae4e94c9f9ac6c43805f811eb5) - exposing RC set email method *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`97d9bbc`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/97d9bbc3c3f2805f42aaea89d31dbd1f46b4dd61) - updated podspec *(commit by [@fto-k](https://github.com/fto-k))*
+- [`70c5887`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/70c5887f0cc3f37b55c1705048741b470c9c5c1f) - updated RC to latest version and fixed outdated code *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.5.14] - 2024-06-07
 ### :bug: Bug Fixes
 - [`4778364`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/4778364aa6333b09e5b0c9481a8b1f1f2b998fde) - forcing AB test variant to user *(commit by [@fto-k](https://github.com/fto-k))*
@@ -198,3 +207,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.12]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.11...1.5.12
 [1.5.13]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.12...1.5.13
 [1.5.14]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.13...1.5.14
+[1.6.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.15...1.6.0
