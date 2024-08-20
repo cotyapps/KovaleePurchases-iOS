@@ -14,7 +14,10 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         Purchases.configure(
             with: RevenueCat.Configuration
                 .builder(withAPIKey: keys.sdkId)
-                .with(observerMode: keys.observerMode)
+                .with(
+                    purchasesAreCompletedBy: keys.observerMode ? .myApp : .revenueCat,
+                    storeKitVersion: StoreKitVersion.storeKit2
+                )
                 .build()
         )
         Purchases.shared.delegate = self

@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/cotyapps/Kovalee-iOS-SDK",
         "state": {
           "branch": null,
-          "revision": "a50495165e71a38485d724f4f1eb3db1b9e560fc",
-          "version": "1.9.22"
+          "revision": "33be50eb207d0fc8de74f1c924c2d404ea4d2104",
+          "version": "1.10.6"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios",
         "state": {
           "branch": null,
-          "revision": "022748f79384035c0752602300e4e112018cd9c9",
-          "version": "4.38.1"
+          "revision": "1cfd74c156185dcb3bffa32c382dec7c1bb8c7ad",
+          "version": "5.2.3"
         }
       },
       {
@@ -161,6 +161,15 @@
           "branch": null,
           "revision": "63fb263319f9482e2a6e33a6b33faa50a20932e7",
           "version": "3.5.0"
+        }
+      },
+      {
+        "package": "Survicate",
+        "repositoryURL": "https://github.com/Survicate/survicate-ios-sdk",
+        "state": {
+          "branch": null,
+          "revision": "ee3020c82f113f980c8b9725acbc6c0f9763419c",
+          "version": "5.1.2"
         }
       },
       {
