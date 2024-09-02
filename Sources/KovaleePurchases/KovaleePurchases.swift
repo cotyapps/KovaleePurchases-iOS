@@ -361,3 +361,39 @@ public extension Kovalee {
         shared.kovaleeManager?.setPurchaseDelegate(delegate)
     }
 }
+
+// MARK: - Bundle
+
+public extension Kovalee {
+    /// Checks if a user is part of a specific bundle.
+    ///
+    /// This method queries the Kovalee manager to determine if a user, identified by their email,
+    /// is included in a particular bundle for a given app.
+    ///
+    /// - Parameters:
+    ///   - bundleId: A String representing the unique identifier of the bundle to check.
+    ///   - appCode: A String representing the code of the app associated with the bundle.
+    ///   - email: A String containing the email address of the user to check.
+    /// - Returns: A Boolean value. `true` if the user is in the bundle, `false` otherwise.
+    static func isUserInBundle(
+        bundleId: String,
+        appCode: String,
+        email: String
+    ) async throws -> Bool {
+        guard let manager = shared.kovaleeManager else {
+            throw PurchaseError.initializationProblem
+        }
+        return try await manager.isUserInBundle(
+            bundleId: bundleId,
+            appCode: appCode,
+            email: email
+        )
+    }
+
+    /// Removes the current user from their associated bundle.
+    ///
+    /// This static method attempts to logout the current user from any bundle they are associated with.
+    static func removeUserFromBundle() {
+        shared.kovaleeManager?.removeUserFromBundle()
+    }
+}
