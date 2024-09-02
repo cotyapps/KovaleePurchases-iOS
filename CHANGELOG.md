@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2024-09-02
+### :sparkles: New Features
+- [`7af93ed`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/7af93edfedf1faaebc415975427bd7eb238660ac) - exposing functions for checking if user is in bundle and removing user from bundle *(commit by [@fto-k](https://github.com/fto-k))*
+- [`97bc13e`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/97bc13ef70377d08a3bc8cf555b5a5fc6c532f98) - updated bundle check to receive also bundle_id *(commit by [@fto-k](https://github.com/fto-k))*
+- [`3f8377c`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/3f8377c627e38b34fc2c1181b0a4ea4683e9fba2) - exposing functions for checking if user is in bundle and removing user from bundle *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`72d1d69`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/72d1d69b3a7ddf4d71cf8c96d8b2937d40ad4aa5) - re-enabled pod publishing in fastlane *(commit by [@fto-k](https://github.com/fto-k))*
+- [`af008e0`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/af008e03fb6100c30c8f53c60de7fde974ae102f) - updated RC to latest version and fixed outdated code *(commit by [@fto-k](https://github.com/fto-k))*
+- [`65ff74f`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/65ff74f15b3c4880a28f8ff5579d08c594b84676) - re-enabled pod publishing in fastlane *(commit by [@fto-k](https://github.com/fto-k))*
+- [`8fbbb1d`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/8fbbb1d7136fe49a7c0c08d422101c20d1b46c30) - added documentation for Bundle functions *(commit by [@fto-k](https://github.com/fto-k))*
+- [`7699d66`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/7699d66168f2235a35cf744784748bc349ed40dd) - updated docs *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.6.0] - 2024-08-20
 ### :sparkles: New Features
 - [`00dfce5`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/00dfce5c92cbd9ae4e94c9f9ac6c43805f811eb5) - exposing RC set email method *(commit by [@fto-k](https://github.com/fto-k))*
@@ -208,3 +222,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.13]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.12...1.5.13
 [1.5.14]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.13...1.5.14
 [1.6.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.15...1.6.0
+[1.7.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.6.0...1.7.0
