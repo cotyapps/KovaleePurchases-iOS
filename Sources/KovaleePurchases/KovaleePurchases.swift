@@ -375,10 +375,6 @@ public extension Kovalee {
     ///   - appCode: A String representing the code of the app associated with the bundle.
     ///   - email: A String containing the email address of the user to check.
     /// - Returns: A Boolean value. `true` if the user is in the bundle, `false` otherwise.
-    ///
-    /// - Throws: `PurchaseError.initializationProblem` if the Kovalee manager is not properly initialized.
-    ///
-    /// - Note: This method is asynchronous and should be called with `await`.
     static func isUserInBundle(
         bundleId: String,
         appCode: String,
