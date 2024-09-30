@@ -15,6 +15,8 @@ let package = Package(
             targets: [
                 "KovaleePurchases",
                 "KovaleePaywall",
+                "PaywallUI",
+                "PaywallManager",
             ]
         ),
     ],
@@ -42,6 +44,20 @@ let package = Package(
                 .superwall,
                 .SDK,
                 .remoteConfig,
+                "KovaleePurchases",
+            ]
+        ),
+        .target(
+            name: "PaywallUI",
+            dependencies: [
+                .SDK,
+                "KovaleePurchases",
+            ]
+        ),
+        .target(
+            name: "PaywallManager",
+            dependencies: [
+                .SDK,
                 "KovaleePurchases",
             ]
         ),
