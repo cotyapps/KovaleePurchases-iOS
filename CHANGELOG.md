@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2024-10-09
+### :sparkles: New Features
+- [`001fca0`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/001fca0e1a292e2044f27ef029f1dd881d4e9bef) - implemented ab test tracking through RevenneCat *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`56771ab`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/56771abf45710b195c8e12bd7ac4a3674ff5b4c7) - bumped version *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.7.1] - 2024-09-13
 ### :sparkles: New Features
 - [`e0212da`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/e0212da7a8f9f463f866c369ec32426d4fd88166) - updated bundle check function to handle new backend requirements *(commit by [@fto-k](https://github.com/fto-k))*
@@ -232,3 +240,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.6.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.5.15...1.6.0
 [1.7.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.6.0...1.7.0
 [1.7.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.0...1.7.1
+[1.8.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.1...1.8.0
