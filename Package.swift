@@ -31,6 +31,7 @@ let package = Package(
                 .SDK,
                 .revenueCat,
                 .superwall,
+                .remoteConfig,
             ],
             resources: [
                 .copy("PrivacyInfo.xcprivacy"),

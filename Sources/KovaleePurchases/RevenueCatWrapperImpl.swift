@@ -1,5 +1,6 @@
 import Foundation
 import KovaleeFramework
+import KovaleeRemoteConfig
 import KovaleeSDK
 import RevenueCat
 import SuperwallKit
@@ -65,7 +66,9 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
         guard let current = rcOfferings.current else {
             return nil
         }
-
+        if let version = current.metadata["ab_test_version"] {
+            Kovalee.setAbTestValue("\(version)")
+        }
         KLogger.debug("🛍️ Fetched current offering \(current)")
         return Offering(offering: current)
     }
