@@ -3,7 +3,7 @@ import KovaleeFramework
 import KovaleeSDK
 import RevenueCat
 
-extension PurchaseManagerCreator: Creator {
+extension PurchaseManagerCreator: @retroactive Creator {
     public func createImplementation(
         withConfiguration _: KovaleeSDK.Configuration,
         andKeys keys: KovaleeKeys

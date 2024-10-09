@@ -28,5 +28,11 @@ It's part of a broader project KovaleeSDK
   spec.dependency "KovaleeSDK", '>= 1.10.7'
   spec.dependency "RevenueCat", '>= 4.38.0'
   spec.dependency "SuperwallKit", '>= 3.5.0'
+  spec.dependency "KovaleeRemoteConfig"
 
+  spec.static_framework = true
+
+  spec.dependency 'Firebase/Core', '>= 10.24.0'
+  spec.dependency "FirebaseAnalyticsSwift"
+  spec.dependency "FirebaseRemoteConfigSwift"
 end
