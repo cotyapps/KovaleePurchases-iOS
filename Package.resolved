@@ -113,9 +113,9 @@
         "package": "KovaleeRemoteConfig",
         "repositoryURL": "https://github.com/cotyapps/KovaleeRemoteConfig-iOS",
         "state": {
-          "branch": null,
-          "revision": "6437878d182a3ebfa586fcaa8a89d82888c28a82",
-          "version": "1.5.3"
+          "branch": "adjust-v5",
+          "revision": "583d9f2d2484fece77870f65d8663df422b98378",
+          "version": null
         }
       },
       {
