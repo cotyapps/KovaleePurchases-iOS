@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2024-10-18
+### :bug: Bug Fixes
+- [`93deee6`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/93deee62f7e7c9dc42b901a05a74ae0e4f287cbd) - update lifetime value check *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.8.0] - 2024-10-09
 ### :sparkles: New Features
 - [`001fca0`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/001fca0e1a292e2044f27ef029f1dd881d4e9bef) - implemented ab test tracking through RevenneCat *(commit by [@fto-k](https://github.com/fto-k))*
@@ -241,3 +246,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.7.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.6.0...1.7.0
 [1.7.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.0...1.7.1
 [1.8.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.1...1.8.0
+[1.8.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.0...1.8.1
