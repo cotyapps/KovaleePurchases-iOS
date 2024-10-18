@@ -48,6 +48,10 @@ public class CustomerInfo: AbstractCustomerInfo, Encodable {
      */
     public let originalPurchaseDate: Date?
 
+    public var activeEntitlements: Bool {
+        !entitlements.active.isEmpty
+    }
+
     init(info: RevenueCat.CustomerInfo) {
         entitlements = EntitlementInfos(entitlements: info.entitlements)
         activeSubscriptions = info.activeSubscriptions
