@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] - 2024-10-21
+### :sparkles: New Features
+- [`7c8b5e6`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/7c8b5e613b8a5774b571090f6ea63acbea795b31) - moving ab test experiments from RC dashboard to Firebase handling *(commit by [@fto-k](https://github.com/fto-k))*
+
+### :wrench: Chores
+- [`515d72e`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/515d72e64e4dcbf05ef226b65fab80c19bdaf8a6) - bumped podspec *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.8.1] - 2024-10-18
 ### :bug: Bug Fixes
 - [`93deee6`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/93deee62f7e7c9dc42b901a05a74ae0e4f287cbd) - update lifetime value check *(commit by [@fto-k](https://github.com/fto-k))*
@@ -247,3 +255,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.7.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.0...1.7.1
 [1.8.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.7.1...1.8.0
 [1.8.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.0...1.8.1
+[1.8.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.1...1.8.2
