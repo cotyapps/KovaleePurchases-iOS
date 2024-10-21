@@ -62,15 +62,27 @@ class RevenueCatWrapperImpl: NSObject, PurchaseManager, Manager {
 
     func fetchCurrentOffering() async throws -> AbstractOffering? {
         KLogger.debug("🛍️ Fetching current offering...")
-        let rcOfferings = try await Purchases.shared.offerings()
-        guard let current = rcOfferings.current else {
+
+        let offerings = try await Purchases.shared.offerings()
+        let abTestValue = await Kovalee.abTestValue()
+
+        let variantOffering = offerings.all.values.first { offering in
+            guard let variant = offering.metadata["ab_test_version"] as? Int else {
+                return false
+            }
+
+            return abTestValue == "\(variant)"
+        }
+
+        if let variantOffering {
+            KLogger.debug("🛍️ Fetched current offering \(variantOffering)")
+            return Offering(offering: variantOffering)
+        } else if let current = offerings.current {
+            KLogger.debug("🛍️ Fetched current offering \(current)")
+            return Offering(offering: current)
+        } else {
             return nil
         }
-        if let version = current.metadata["ab_test_version"] {
-            Kovalee.setAbTestValue("\(version)")
-        }
-        KLogger.debug("🛍️ Fetched current offering \(current)")
-        return Offering(offering: current)
     }
 
     func checkTrialOrIntroDiscountEligibility(productIdentifiers: [String]) async -> [String: Int] {
