@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2024-12-10
+### :bug: Bug Fixes
+- [`745d066`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/745d066f4720bdf636e0399cb3c6edb0047b60bc) - removed unused web2web function *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.9.0] - 2024-12-10
 ### :sparkles: New Features
 - [`ff74bdc`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/ff74bdc7b483769b85e312d2391a408a984a9ed3) - new deeplink parser function *(commit by [@fto-k](https://github.com/fto-k))*
@@ -262,3 +267,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.8.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.0...1.8.1
 [1.8.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.1...1.8.2
 [1.9.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.2...1.9.0
+[1.9.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.9.0...1.9.1
