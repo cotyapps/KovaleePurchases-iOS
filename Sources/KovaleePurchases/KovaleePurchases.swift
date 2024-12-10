@@ -139,6 +139,23 @@ public extension Kovalee {
         shared.kovaleeManager?.setRevenueCatEmail(email: email)
     }
 
+    /// Checks if the current user has an active premium subscription or entitlement.
+    ///
+    /// This method is asynchronous and may throw an error if the user information
+    /// cannot be retrieved.
+    ///
+    /// - Returns: A `Bool` indicating whether the user has an active premium status.
+    ///            Returns `true` if the user has active subscriptions or entitlements,
+    ///            and `false` otherwise.
+    ///
+    /// - Throws: An error if there is a problem fetching the user information.
+    static func isUserPremium() async throws -> Bool {
+        guard let customerInfo = try await Self.customerInfo() else {
+            return false
+        }
+        return !customerInfo.activeSubscriptions.isEmpty || customerInfo.activeEntitlements
+    }
+
     /// Sync the purchases for the current customer
     ///
     /// - Returns: current customer information
@@ -387,5 +404,115 @@ public extension Kovalee {
     /// This static method attempts to logout the current user from any bundle they are associated with.
     static func removeUserFromBundle() {
         shared.kovaleeManager?.removeUserFromBundle()
+    }
+}
+
+// MARK: - Web2Web
+
+public extension Kovalee {
+    /// Logs in a user using a full deep link URL containing user credentials.
+    ///
+    /// This method handles a web-to-web login flow where a deep link URL is provided to authenticate a user.
+    /// The full deep link URL should be passed as an input parameter, typically obtained from the AppDelegate.
+    ///
+    /// - Parameters:
+    ///    - url: A `URL` representing the full deep link containing the user credentials in the query parameters.
+    ///           The URL must include a `user_id` parameter and have the host `web2web`.
+    ///
+    /// - Returns: The updated ``CustomerInfo`` if the user is successfully logged in, or `nil` if the URL is invalid.
+    ///
+    ///
+    /// ### Example Deep Link URL
+    /// ```
+    /// https://example.com/web2web?user_id=123456789
+    /// yourapp_deeplink://web2web?user_id=123456789
+    /// ```
+    /// ### Example usage
+    /// ```swift
+    /// func application(
+    ///     _ application: UIApplication,
+    ///     open url: URL,
+    ///     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    /// ) -> Bool {
+    ///     // Pass the URL to this function for handling
+    ///     Task {
+    ///         do {
+    ///             let customerInfo = try await Kovalee.loginUserFromWeb(withUrl: url)
+    ///             print("User logged in successfully: \(String(describing: customerInfo))")
+    ///         } catch {
+    ///             print("Failed to log in user: \(error)")
+    ///         }
+    ///     }
+    ///     return true
+    /// }
+    /// ```
+    static func loginUserFromWeb(withUrl url: URL) async throws -> CustomerInfo? {
+        guard let userId = handleIncomingURL(url) else {
+            return nil
+        }
+
+        let result = try await Self.setRevenueCatUserId(userId: userId)
+        return result.info
+    }
+
+    /// Determines if a web user has an active premium subscription or entitlement based on a deep link URL.
+    ///
+    /// This utility function combines the login process using a deep link URL and checks if the user has a premium status.
+    /// It first authenticates the user using the provided deep link and then queries the premium status for the user.
+    ///
+    /// - Parameters:
+    ///    - url: A `URL` representing the full deep link containing the user credentials in the query parameters.
+    ///           The URL must include a `user_id` parameter and have the host `web2web`.
+    ///
+    /// - Returns: A `Bool` indicating whether the web user has an active premium status.
+    ///            Returns `true` if the user has active subscriptions or entitlements, and `false` otherwise.
+    ///
+    /// - Throws: An error if the login process or the premium status retrieval fails.
+    ///
+    /// ### Example Deep Link URL
+    /// ```
+    /// https://example.com/web2web?user_id=123456789
+    /// yourapp_deeplink://web2web?user_id=123456789
+    /// ```
+    ///
+    /// ### Example Usage
+    /// ```swift
+    /// func application(
+    ///     _ application: UIApplication,
+    ///     open url: URL,
+    ///     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    /// ) -> Bool {
+    ///     Task {
+    ///         do {
+    ///             let isPremium = try await Kovalee.isWebUserPremium(withUrl: url)
+    ///             print("Is the web user premium? \(isPremium)")
+    ///         } catch {
+    ///             print("Error checking premium status for web user: \(error)")
+    ///         }
+    ///     }
+    ///     return true
+    /// }
+    /// ```
+    static func isWebUserPremium(withUrl url: URL) async throws -> Bool {
+        _ = try await loginUserFromWeb(withUrl: url)
+        return try await isUserPremium()
+    }
+
+    private static func handleIncomingURL(_ url: URL) -> String? {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            KLogger.error("Invalid URL: \(url.absoluteString)")
+            return nil
+        }
+
+        guard let action = components.host, action == "web2web" else {
+            KLogger.error("We can't handle this action: \(components.host ?? "")")
+            return nil
+        }
+
+        guard let userId = components.queryItems?.first(where: { $0.name == "user_id" })?.value else {
+            KLogger.error("Missing user_id query parameter")
+            return nil
+        }
+        return userId
     }
 }
