@@ -469,6 +469,8 @@ public extension Kovalee {
         }
 
         _ = try await Self.setRevenueCatUserId(userId: userId)
+        Self.setAmplitudeUserId(userId: userId)
+
         return try await isUserPremium()
     }
 
