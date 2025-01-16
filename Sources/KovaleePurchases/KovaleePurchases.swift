@@ -480,7 +480,7 @@ public extension Kovalee {
             return nil
         }
 
-        guard let action = components.host, action == "web2web" else {
+        guard let action = components.host, action == "/web2web" else {
             KLogger.error("We can't handle this action: \(components.host ?? "")")
             return nil
         }
