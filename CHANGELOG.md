@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.3] - 2025-01-16
+### :bug: Bug Fixes
+- [`c6d44f6`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/c6d44f6ee54829e934b0fe71fef476a0757d7db5) - fixed web2web url parsing *(commit by [@fto-k](https://github.com/fto-k))*
+
+
 ## [1.9.2] - 2024-12-13
 ### :bug: Bug Fixes
 - [`c4e0b97`](https://github.com/cotyapps/KovaleePurchases-iOS/commit/c4e0b9719641d99ac151e3867c0d5818716c64ab) - set up Amplitude id when coming from web2app *(commit by [@rodrigowoulddo](https://github.com/rodrigowoulddo))*
@@ -274,3 +279,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.9.0]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.8.2...1.9.0
 [1.9.1]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.9.0...1.9.1
 [1.9.2]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.9.1...1.9.2
+[1.9.3]: https://github.com/cotyapps/KovaleePurchases-iOS/compare/1.9.2...1.9.3
