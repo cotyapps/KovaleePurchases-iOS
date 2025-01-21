@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/RevenueCat/purchases-ios",
         "state": {
           "branch": null,
-          "revision": "1cfd74c156185dcb3bffa32c382dec7c1bb8c7ad",
-          "version": "5.2.3"
+          "revision": "d723de873b8bd8146fe1bed0cd809ab73d1a3105",
+          "version": "5.14.6"
         }
       },
       {
