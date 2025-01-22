@@ -109,7 +109,7 @@ public extension Kovalee {
 
         let isPremium = try await isUserPremium()
         if isPremium {
-            Kovalee.setUserProperty(key: "webPremium", value: "true")
+            Kovalee.setUserProperty(key: "web_premium", value: "true")
         }
         return isPremium
     }
