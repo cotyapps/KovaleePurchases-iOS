@@ -64,10 +64,7 @@ public extension Kovalee {
             return false
         }
 
-        _ = try await Self.setRevenueCatUserId(userId: userId)
-        Self.setAmplitudeUserId(userId: userId)
-
-        return try await isUserPremium()
+        return try await handleWebUser(withId: userId)
     }
 
     /// Checks if the user has an active premium subscription by extracting a user ID from the clipboard.
@@ -103,10 +100,18 @@ public extension Kovalee {
             return false
         }
 
-        _ = try await Self.setRevenueCatUserId(userId: clipboardUserId)
-        Self.setAmplitudeUserId(userId: clipboardUserId)
+        return try await handleWebUser(withId: clipboardUserId)
+    }
 
-        return try await isUserPremium()
+    private static func handleWebUser(withId userId: String) async throws -> Bool {
+        _ = try await setRevenueCatUserId(userId: userId)
+        setAmplitudeUserId(userId: userId)
+
+        let isPremium = try await isUserPremium()
+        if isPremium {
+            Kovalee.setUserProperty(key: "webPremium", value: "true")
+        }
+        return isPremium
     }
 
     private static func handleIncomingURL(_ url: URL) -> String? {
